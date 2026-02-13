@@ -1,0 +1,318 @@
+%% AIs:
+%% Claude
+%% Gemini (deep mind)
+
+
+%% Detectors:
+%% ghostbuster:
+%% https://github.com/vivek3141/ghostbuster
+
+%% DetectGPT
+%% https://detectgpt.com/app/
+
+%% GPTzero
+
+%% Originality.AI
+
+%% Roberta
+
+
+%% We need at least 10K cohort each in AI and human text.
+%% Anything les will not be serious.
+
+%% We need a figure which shows the different models ranked in ordrer of their H number, x axis can be time to show progression.
+
+%% our key positions here is that we are not competingto be the best detector. But providing theoretical insight into what distinguishes AI text from human text and training free future proof ranking ability
+
+
+
+\PassOptionsToPackage{usenames,x11names, dvipsnames, svgnames}{xcolor}
+\documentclass[9pt,twocolumn,oneside]{pnas-new}
+% Use the lineno option to display guide line numbers if required.
+\setboolean{displaywatermark}{false}
+\usepackage{orcidlink}   % <— add this
+
+% \input{preamble_ieee.tex}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+%\usepackage{pdfpages}
+%\usepackage{shellesc}
+%\ShellEscape{pdflatex si}
+\usetikzlibrary{shapes,calc,shadows,fadings,arrows,decorations.pathreplacing,automata,positioning}
+\usepackage{hyperref}
+\usetikzlibrary{external}
+\tikzexternalize[prefix=./Figures/External/]% activate
+\tikzexternaldisable 
+\usetikzlibrary{decorations.text}
+\usepgfplotslibrary{colorbrewer} 
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{fillbetween}
+%\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage[algo2e,ruled,vlined]{algorithm2e}
+
+\usepackage{mathtools}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\newtheorem{thm}{Theorem}
+\newtheorem{cor}{Corollary}
+\newtheorem{lem}{Lemma} 
+\newtheorem{prop}{Proposition}
+\newtheorem{defn}{Definition}
+\newtheorem{exmpl}{Example}
+\newtheorem{rem}{Remark}
+\newtheorem{notn}{Notation}
+\usepackage{xspace}
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}%
+
+\newcommand{\set}[1]{\left\{ #1 \right\}}
+\newcommand{\paren}[1]{\left( #1 \right)}
+\newcommand{\bracket}[1]{\left[ #1 \right]}
+% \newcommand{\norm}[1]{\left\Vert #1 \right\Vert}
+\newcommand{\nrm}[1]{\left\llbracket{#1}\right\rrbracket}
+\newcommand{\parenBar}[2]{\paren{#1\,{\left\Vert\,#2\right.}}}
+\newcommand{\parenBarl}[2]{\paren{\left.#1\,\right\Vert\,#2}}
+\newcommand{\ie}{$i.e.$\xspace}
+\newcommand{\addcitation}{\textcolor{black!50!red}{\textbf{ADD CITATION}}}
+\newcommand{\subtochange}[1]{{\color{black!50!green}{#1}}}
+\newcommand{\tobecompleted}{{\color{black!50!red}TO BE COMPLETED.}}
+
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\expect}{\mathbf{E}}
+\DeclareMathOperator*{\var}{\mathbf{Var}}
+
+\newcommand{\pIn}{\mathscr{P}_{\textrm{in}}}
+\newcommand{\pOut}{\mathscr{P}_{\textrm{out}}}
+\newcommand{\aIn}[1][\Sigma]{#1_{\textrm{in}}}
+\newcommand{\aOut}[1][\Sigma]{#1_{\textrm{out}}}
+\newcommand{\xin}[1]{#1_{\textrm{in}}}
+\newcommand{\xout}[1]{#1_{\textrm{out}}}
+
+\newcommand{\R}{\mathbb{R}} % Set of real numbers
+\newcommand{\F}[1][]{\mathcal{F}_{#1}}
+\newcommand{\SR}{\mathcal{S}} % Semiring of sets
+\newcommand{\RR}{\mathcal{R}} % Ring of sets
+\newcommand{\N}{\mathbb{N}} % Set of natural numbers (0 included)
+
+\newcommand{\pitilde}{\widetilde{\pi}}
+\newcommand{\Pitilde}{\widetilde{\Pi}}
+
+\newcommand{\Pp}[1][n]{\mathscr{P}^+_{#1}}
+%% ## Equation Space Control---------------------------
+\def\EQSP{3pt}
+\newcommand{\mltlne}[2][\EQSP]{\begingroup\setlength\abovedisplayskip{#1}\setlength\belowdisplayskip{#1}\begin{equation}\begin{multlined} #2 \end{multlined}\end{equation}\endgroup\noindent}
+\newcommand{\cgather}[2][\EQSP]{\begingroup\setlength\abovedisplayskip{#1}\setlength\belowdisplayskip{#1}\begin{gather} #2 \end{gather}\endgroup\noindent}
+\newcommand{\cgathers}[2][\EQSP]{\begingroup\setlength\abovedisplayskip{#1}\setlength\belowdisplayskip{#1}\begin{gather*} #2 \end{gather*}\endgroup\noindent}
+\newcommand{\calign}[2][\EQSP]{\begingroup\setlength\abovedisplayskip{#1}\setlength\belowdisplayskip{#1}\begin{align} #2 \end{align}\endgroup\noindent}
+\newcommand{\caligns}[2][\EQSP]{\begingroup\setlength\abovedisplayskip{#1}\setlength\belowdisplayskip{#1}\begin{align*} #2 \end{align*}\endgroup\noindent}
+\newcommand{\mnp}[2]{\begin{minipage}{#1}#2\end{minipage}} 
+\newif\iftikzX
+\tikzXtrue
+\tikzXfalse 
+\newif\ifFIGS  
+\FIGSfalse  
+\FIGStrue
+\cfoot{\scriptsize\thepage}
+\lfoot{} 
+\rfoot{} 
+\def\EXTENDEDDATA{Extended Data\xspace}
+\def\SUPPLEMENTARY{Supplementary\xspace}
+\def\Methods{Methods\xspace}
+\newcounter{Dcounter}
+\setcounter{Dcounter}{1}
+\newcommand{\DQS}[1]{
+    \marginpar{
+      \tikzexternaldisable 
+      \tikz{
+        \node[
+          rounded corners=5pt,
+          draw=none,
+          thick,
+          fill=black!10,
+          font=\sffamily\fontsize{7}{8}\selectfont
+        ]{\mnp{.3in} {\color{Red3}\raggedright  \#\theDcounter.~#1}}; 
+      }
+    }
+  \stepcounter{Dcounter}\xspace
+}
+
+
+
+
+\templatetype{pnasbriefreport} % Choose template
+% {pnasresearcharticle} = Template for a two-column research article
+% {pnasmathematics} %= Template for a one-column mathematics article
+% {pnasinvited} %= Template for a PNAS invited submission
+\def\TITLE{Why Evolution Operates Near One Mutation per Genome per Generation}%Model-agnostic  Recognition of AI-Generated Text with Descriptional Complexity Measure}
+\title{\TITLE}
+    \def\NERO{NERO\xspace}
+
+% Use letters for affiliations, numbers to show equal authorship (if applicable) and to indicate the corresponding author
+\author[a]{xxx}
+%\author[b,1,2]{Author Two}
+\author[a]{Ishanu Chattopadhyay\orcidlink{0000-0001-8339-8162}}
+
+\affil[a]{University of Kentucky}
+%\affil[b]{Affiliation Two}
+%\affil[c]{Affiliation Three}
+
+% Please give the surname of the lead author for the running footer
+\leadauthor{Chattopadhyay}
+
+% Please include corresponding author, author contribution and author declaration information
+\authorcontributions{RS carried out experimental runs and wrote the paper, IC conceived of research, implemented the algorithm, wrote the paper and procured suppport.}
+\authordeclaration{Authors have no competing interests.}
+%\equalauthors{\textsuperscript{1}A.O.(Ross) contributed equally to this work with A.T. (Author Two) (remove if not applicable).}
+\correspondingauthor{\textsuperscript{2}To whom correspondence should be addressed. E-mail: ishanu\_ch@uky.edu}
+
+% At least three keywords are required at submission. Please provide three to five keywords, separated by the pipe symbol
+\keywords{entropy rate $|$ AI-generated text detection   $|$ large language models  $|$  algorithmic complexity  $|$ probabilistic  automata }
+%% \keywords{entropy rate AI-generated text detection large language models $|$        algorithmic complexity $|$ probabilistic finite-state automata}
+
+\begin{abstract}
+Across organisms and viruses, per-site mutation rates scale inversely with genome length, yielding an approximately constant number of mutations per genome per generation. Existing explanations for this phenomenon, known as Drake’s rule, invoke biochemical fidelity constraints or population-genetic error-threshold arguments that primarily bound mutation rates from above. Here we show that Drake’s rule emerges from a mechanism-independent information-theoretic constraint on blind local perturbation. Treating mutation as a generative process upstream of selection, we formalize evolutionary novelty as statistical exceptionality relative to mutation alone. We show that the rate at which mutation supplies such exceptional variants is maximized when the expected number of mutations per genome per generation is order one, implying an optimal per-site mutation rate scaling as \(1/n\), where \(n\) is genome length. This result does not rely on fitness landscapes, population structure, or biochemical details, and reflects a general principle governing structure discovery under local random perturbations.
+\end{abstract}
+
+\dates{This manuscript was compiled on \today}
+\doi{\url{www.pnas.org/cgi/doi/10.1073/pnas.XXXXXXXXXX}}
+
+%#todo
+% compare auc with 3.5 with entropy and zerogpt
+% compare with short lengths
+% do training
+
+\begin{document}  
+
+\maketitle
+\thispagestyle{firststyle}
+\ifthenelse{\boolean{shortarticle}}{\ifthenelse{\boolean{singlecolumn}}{\abscontentformatted}{\abscontent}}{}
+
+\firstpage{5} 
+% Use \firstpage to indicate which paragraph and line will start the second page and subsequent formatting. In this example, there are a total of 11 paragraphs on the first page, counting the first level heading as a paragraph. The value {12} represents the number of the paragraph starting the second page. If a paragraph runs over onto the second page, include a bracket with the paragraph line number starting the second page, followed by the paragraph number in curly brackets, e.g. "\firstpage[4]{11}".
+
+
+% If your first paragraph (i.e. with the \dropcap) contains a list environment (quote, quotation, theorem, definition, enumerate, itemize...), the line after the list may have some extra indentati
+
+
+
+%% \section*{Significance}
+%% A long-standing puzzle in evolutionary biology is why mutation rates across diverse organisms scale inversely with genome length, resulting in approximately one mutation per genome per generation. We show that this scaling follows from a general information-theoretic constraint: mutation optimally supplies selection with novel, structured variants when the expected number of mutations per genome is order one. This explanation is independent of biological implementation details and applies broadly to adaptive systems driven by blind local exploration.
+
+\dropcap{M}utation introduces randomness; selection preserves structure. Evolution therefore operates under a fundamental tension: mutation must generate novelty without overwhelming inheritable organization. A striking empirical regularity across biological systems is that the per-site mutation rate \(\mu\) scales approximately as \(1/n\), where \(n\) is genome length, so that the per-genome mutation rate
+\[
+U = n\mu
+\]
+is approximately constant. This phenomenon, observed across DNA- and RNA-based organisms spanning many orders of magnitude in genome size, is known as Drake’s rule.
+
+Prevailing explanations for Drake’s rule fall into two broad classes. Mechanistic accounts attribute mutation rates to biochemical replication fidelity and energetic costs, while population-genetic theories emphasize error thresholds beyond which inherited information becomes unstable. These approaches provide important constraints, but they primarily explain why mutation rates cannot be too large. They do not explain why evolution consistently operates near a particular scaling regime across diverse biological implementations.
+
+Here we pursue a complementary, mechanism-independent explanation by treating mutation as a blind generative process upstream of selection. Mutation has no access to fitness; it samples variants locally around a parent genome. Selection can only act on the statistical properties of the variants mutation supplies. This motivates a minimal question: which mutation rates maximize the supply of variants that are exceptional relative to mutation alone, and therefore capable of serving as candidates for selection-driven amplification?
+
+\section*{Mutation geometry and exceptionality}
+Let \(x \in [q]^n\) denote a length-\(n\) genome over an alphabet of size \(q \ge 2\). Mutation at Hamming radius \(m\) produces variants in the Hamming sphere
+\[
+H_m(x) = \{ y \in [q]^n : d_H(x,y)=m \},
+\]
+whose cardinality is
+\[
+|H_m(x)| = \binom{n}{m}(q-1)^m .
+\]
+As the number of mutated sites increases, the mutation-accessible neighborhood grows combinatorially, diluting any structured or special outcome among an exponentially expanding set of possibilities.
+
+Random mutation induces a canonical two-part description of its outcomes: first specify the mutation-accessible model \(H_m(x)\), then specify an index within that model. The associated indexing cost is
+\[
+c(m) = \log |H_m(x)|.
+\]
+For a uniformly drawn mutant \(y \sim \mathrm{Unif}(H_m(x))\), the typical description length satisfies, up to lower-order terms,
+\[
+K(y) \approx K(x) + c(m),
+\]
+where \(K(\cdot)\) denotes prefix-free Kolmogorov complexity (Supporting Information).
+
+We formalize evolutionary novelty as exceptionality relative to this mutation-induced model. A mutant \(y\) constitutes a \emph{net structure discovery} at margin \(\Delta \ge 1\) if
+\[
+K(y) \le K(x) + c(m) - \Delta .
+\]
+Equivalently, \(y\) has positive randomness deficiency at least \(\Delta\) relative to \(H_m(x)\). This definition captures a minimal requirement for adaptive potential upstream of selection: a variant must be rare under mutation alone in order to plausibly serve as a candidate for selective amplification.
+
+A key consequence is that the probability of such exceptionality decays inversely with the size of the mutation-accessible neighborhood. For typical genomes (Supporting Information),
+\[
+\Pr_{y \sim \mathrm{Unif}(H_m(x))}\!\left[\text{net discovery at margin }\Delta\right]
+\propto
+\frac{2^{\Delta}}{|H_m(x)|},
+\]
+up to polylogarithmic factors. Thus, as mutation radius increases, exceptional outcomes become rapidly vanishingly rare.
+
+\section*{Optimal mutation rate}
+In biological evolution, the mutation radius itself is random. Let
+\[
+M \sim \mathrm{Binomial}(n,\mu)
+\]
+denote the number of mutated sites per generation under independent per-site mutation probability \(\mu\). For fixed novelty margin \(\Delta\), define the expected discovery rate
+\[
+\Phi(\mu) = \sum_{m=1}^n \Pr(M=m)\;
+\Pr_{y \sim \mathrm{Unif}(H_m(x))}\!\left[\text{net discovery at margin }\Delta\right].
+\]
+
+Substituting the inverse-neighborhood scaling above and the identity
+\[
+\Pr(M=m) = \binom{n}{m}\mu^m(1-\mu)^{n-m},
+\]
+the combinatorial factor \(\binom{n}{m}\) cancels with the corresponding term in \(|H_m(x)|\), yielding the leading-order form (Supporting Information)
+\[
+\Phi(\mu) \propto (1-\mu)^n \sum_{m\ge 1} \left( \frac{\mu}{q-1} \right)^m
+\approx
+C\,\mu\,e^{-n\mu},
+\]
+for \(\mu \ll 1\) and fixed \(q\), where \(C\) absorbs constants and lower-order factors.
+
+The optimization is immediate: the function \(\mu e^{-n\mu}\) is maximized at
+\[
+n\mu = 1.
+\]
+Thus the optimal per-site mutation probability scales as
+\[
+\mu^\star = \frac{1+o(1)}{n},
+\]
+equivalently yielding an optimal per-genome mutation rate \(U^\star \approx 1\). This recovers Drake’s rule as a consequence of maximizing the supply of mutation-generated exceptional variants under blind local perturbation.
+
+\section*{Discussion}
+Our analysis reframes Drake’s rule as an upstream supply constraint imposed by mutation, rather than as a downstream equilibrium determined by selection. Mutation cannot optimize fitness directly; it can only optimize the statistical properties of the variants it supplies. Maximizing the rate at which mutation produces variants that are exceptional relative to its own generative mechanism provides a natural objective under this constraint.
+
+This explanation does not rely on biochemical replication fidelity, fitness landscapes, population structure, or mutation–selection balance. Instead, it depends only on the geometry of local random perturbations in high-dimensional discrete spaces and on the requirement that adaptive novelty be rare under mutation alone. Although motivated by genetic evolution, the argument applies broadly to any adaptive system driven by blind local exploration, in which perturbations that are too small fail to generate novelty and perturbations that are too large destroy exploitable structure.
+
+\section*{Conclusion}
+We show that Drake’s rule emerges as a general information-theoretic constraint on blind local exploration. Mutation optimally supplies selection with novel, structured variants when the expected number of mutations per genome per generation is order one. This result transcends biological detail and reflects a universal principle governing structure discovery under uncertainty.
+
+
+
+
+\matmethods{
+\paragraph{Data acquisition.} Human-authored texts were obtained from Project Gutenberg (English-language compositions) and technical manuscripts from arXiv via the official OAI-PMH interface. AI-generated texts were produced via webform and API access to the LLMs listed in Table~\ref{tab1}. Details on prompt design, API access, and \NERO computation are provided in the Supplementary Methods.
+
+\paragraph{Code availability.} A  reproducible implementation of the entropy-rate estimator and end-to-end evaluation pipeline is available under an MIT license at \url{https://github.com/zeroknowledgediscovery/nero}.
+}
+
+\showmatmethods{} % Display the Materials and Methods section
+\acknow{This work was supported in part by the Defense Advanced Research Projects Agency (DARPA) under the ARC program. Views, opinions, and findings expressed are solely those of the authors.}
+
+\showacknow{} % Display the acknowledgments section
+
+%##################################################
+% #######################################
+%#################################################
+%#################################################
+%\fontsize{6}{8}\selectfont
+
+%\subsection*{References}
+ 
+
+%\bibliographystyle{tran}
+\bibliography{BibLib1,tom}
+
+
+%\include{SIpnas.tex}
+ 
+
+%\includepdf[pages=-]{si.pdf}
+\end{document}

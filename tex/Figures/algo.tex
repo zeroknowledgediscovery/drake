@@ -1,0 +1,81 @@
+%#########################################################
+%#########################################################
+\def\TOL{\textrm{\scshape Count}_\textrm{total}}
+\def\Tol{\textrm{\scshape Count}_\textrm{map}}
+\def\Num{\textrm{\scshape Num}}
+\begin{algorithm}[t]\sffamily \fontsize{7}{8}\selectfont
+%\SetCommentSty{textbf}
+\SetKw{BRK}{break}
+\DontPrintSemicolon
+\KwIn{Data sequence $s$ over alphabet $\Sigma$, $\epsilon$,  Confidence level $\alpha$ }
+\KwOut{ Entropy rate $\mathbf{h}$, Uncertainty $\mathbf{E}$ at specified confidence level }
+%Compute $\epsilon$-synchronizing string $x_0$\;
+\BlankLine
+
+Initialize $h=0$\;
+Initialize $\TOL = 0$\;
+Initialize $\Tol = \varnothing$  \color{Red4}
+ \tcc*[f]{\texttt{ \fontsize{6}{6}\selectfont hashtable with keys as  probability distributions, $\phantom{xxxxxxxxxx.xxxxxxxxxxxxxxx}$  and values as doubles}}\color{black}\;
+Set $ C_0 = (8/e+8/e^2)(\vert \Sigma \vert -1)$,   $C_1  = 2 / \log^2 \vert \Sigma \vert $\;
+Set $N_{\mathrm{min}} = 10$\color{Red4}\tcc*[f]{ \texttt{ \fontsize{6}{6}\selectfont Any small integer suffices (See Section~\ref{secimpl})}}\color{black}\;
+\BlankLine
+\rule{.945\columnwidth}{1pt}
+%\BlankLine
+\color{DodgerBlue4}
+\tcc*[f]{\scriptsize I. $\epsilon$-synchronization String Identification}\;\color{black}
+\BlankLine
+
+
+\ForEach{$x \in \Sigma^{\log(1/\epsilon)}_+$}{
+$D[x] \longleftarrow \phi^s(x) $\;
+}
+
+ $A \longleftarrow \{x': \textrm{$D[x']$ is on the convex hull of the set of values in hashtable $D$} \}$\;
+ $x_0 \longleftarrow \argmax_{x \in A} \#^sx$\color{Red4}\tcc*[f]{ \texttt{ \fontsize{6}{6}\selectfont $\epsilon$-synchronization string}}\color{black} \;
+$p_0  \longleftarrow (\#^sx_0 )\vert s \vert $ \color{Red4}\tcc*[f]{ \texttt{ \fontsize{6}{6}\selectfont Occurrence prob. of $\epsilon$-synchronization string}}\color{black}\;
+%\BlankLine
+\rule{.945\columnwidth}{1pt}
+%\BlankLine
+\color{DodgerBlue4}
+\tcc*[f]{\scriptsize II. Entropy Rate Estimatation}\;\color{black}
+\BlankLine
+
+Select  $\ND \subset \Sigma^\star $ with length $\ell$  strings drawn with probability $\frac{1}{\vert \Sigma \vert^\ell}$\;
+\color{Red4}\tcc*[h]{ \texttt{ \fontsize{6}{6}\selectfont $\vert \ND \vert \sim 10^7 \log^2 \vert \Sigma \vert$ sufficient for negligible  uncertainty contribution}}\color{black}\;
+%\BlankLine
+\ForEach{$x \in \ND$}{
+\eIf{$\#^s x_0x > N_{\mathrm{min}}$}{
+Compute $u \longleftarrow \phi^s(x_0x)$\color{Red4}\tcc*[f]{ \texttt{ \fontsize{6}{6}\selectfont Symbolic derivative at $x_0x$}}\color{black}\;
+%
+\eIf{$\exists \textbf{ key } v \in \Tol \textrm{ s.t. }  \| u - v \|_\infty \leqq \epsilon $}{
+$\Tol[v] \longleftarrow \Tol [v] +1$\;
+}{
+Set $\Tol[u] = 1$\;
+}
+%
+$\TOL \longleftarrow \TOL +1$\;
+}{
+Delete $x$ from $\ND$\;
+}
+}
+
+\ForEach{$\mathrm{key} \ v \in \Tol$}{
+$\mathbf{h} \longleftarrow \mathbf{h} + \left (\dfrac{\Tol[v]}{\TOL}  \times H(v)\right )$\color{Red4}\tcc*[f]{ \texttt{ \fontsize{6}{6}\selectfont $H(v)$: entropy of $v$}}\color{black}\;
+}
+%\BlankLine
+\rule{.945\columnwidth}{1pt}
+%\BlankLine
+\color{DodgerBlue4}
+\tcc*[f]{\scriptsize III. Uncertainty Estimation}\;\color{black}
+\BlankLine
+
+$\epsilon_\star \longleftarrow \min \epsilon_0$ satisfying:
+$ \alpha+  C_0 \frac{1+\epsilon^2_0}{\vert s \vert \epsilon^{3}_0} + 2 e^{-C_1\vert \ND \vert  \epsilon^{2}_0 } + e^{-\epsilon_0 p_0 \vert s \vert} \leqq  1 $\;
+$\mathbf{E} \longleftarrow \epsilon_\star + 2 \mathds{B}(\epsilon_\star, \vert \Sigma \vert)$\;
+\KwRet $\mathbf{h}$, $\mathbf{E}$\; 
+% 
+\captionN{Detailed pseudocode for entropy rate estimation}\label{algo1}
+\end{algorithm}
+%#########################################################
+%#########################################################
+%#########################################################

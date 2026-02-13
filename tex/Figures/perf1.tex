@@ -1,0 +1,313 @@
+\begin{tikzpicture}[text=gray]
+    \gdef\NERO{NERO\xspace}
+\def\GCOL{black!70}
+  \node[,label={[anchor=west,yshift=.1in]130:{\large a.} ROC (GPT4o)}] (N1) at (0,0) {\begin{tikzpicture}[font=\bf\sffamily\fontsize{8}{8}\selectfont]
+ \def\COLA{black}
+  \def\COLB{black}  
+    \def\COLC{SeaGreen1}  
+\def\HGT{1.2in}
+\def\neronotrain{Figures/plotdata/neronotrain4o.csv} 
+\def\nerotrain{Figures/plotdata/nerotrain4o.csv} 
+\def\zerogpt{Figures/plotdata/zerogpt4o.csv} 
+      \begin{axis}[legend style={anchor=east,font=\bf\sffamily\fontsize{7}{8}\selectfont,
+          at={(1.05,1.250)},
+          inner sep=1pt,
+          draw=none,
+          fill=white,
+          fill opacity=.9,
+          align=left,
+          text opacity=1,
+          legend cell align={left},
+          text=black,},
+    axis line style={black, thick},
+    % axis background/.style={
+    %   shade,top color=transparent!5,bottom color=transparent!1},
+    width=\HGT, 
+    height=\HGT,
+    scale only axis=true,
+    enlargelimits=0.010,
+    axis on top=true,
+    major tick length=0pt,
+    xmin=0,xmax=1,ymin=0,ymax=1,
+    xlabel={1-specificity},
+    ylabel={sensitivity},
+    grid=both,
+    grid style={dashed,semithick,draw=\GCOL, opacity=.25},
+]
+\addplot[ thick, smooth, mark=none, \COLA] table [x=fpr, y=tpr, col sep=comma]{\neronotrain};
+\addlegendentry{NERO (no training): $88.8\%$};
+\addplot[forget plot, name path=lower, fill=none, draw=none, mark=none,] table [x=fpr, y=tpr_lower,col sep=comma]{\neronotrain};
+\addplot[forget plot, name path=upper, fill=none, draw=none, mark=none,] table [x=fpr, y=tpr_upper,col sep=comma]{\neronotrain};
+\addplot[forget plot,draw=none, fill=\COLA, opacity=0.2] fill between[of=lower and upper];
+
+\addplot[dashed, thick, smooth, mark=none, \COLB] table [x=fpr, y=tpr, col sep=comma]{\nerotrain};
+\addlegendentry{\NERO (with training): $96.9\%$};
+\addplot[forget plot, name path=lower, fill=none, draw=none, mark=none,] table [x=fpr, y=tpr_lower,col sep=comma]{\nerotrain};
+\addplot[forget plot, name path=upper, fill=none, draw=none, mark=none,] table [x=fpr, y=tpr_upper,col sep=comma]{\nerotrain};
+\addplot[forget plot,draw=none, fill=\COLB, opacity=0.2] fill between[of=lower and upper];
+
+\addplot[thick, smooth, mark=none, \COLC] table [x=fpr, y=tpr, col sep=comma]{\zerogpt};
+\addlegendentry{zerogpt: $97.0\%$};
+\addplot[forget plot, name path=lower, fill=none, draw=none, mark=none,] table [x=fpr, y=tpr_lower,col sep=comma]{\zerogpt};
+\addplot[forget plot, name path=upper, fill=none, draw=none, mark=none,] table [x=fpr, y=tpr_upper,col sep=comma]{\zerogpt};
+\addplot[forget plot,draw=none, fill=\COLC, opacity=0.2] fill between[of=lower and upper];
+ 
+
+
+\end{axis}
+\end{tikzpicture}};
+
+  \node[anchor=south west,label={[anchor=west,xshift=.15in,yshift=.1in]130:{\large b.} ROC (GPT4o + GPT3.5)}] (N2) at (N1.south east) {\begin{tikzpicture}[font=\bf\sffamily\fontsize{8}{8}\selectfont]
+  \def\COLA{black}
+  \def\COLB{black}  
+    \def\COLC{SeaGreen1}  
+\def\HGT{1.2in}
+\def\neronotrain{Figures/plotdata/neronotrain.csv} 
+\def\nerotrain{Figures/plotdata/nerotrain.csv} 
+\def\zerogpt{Figures/plotdata/zerogpt.csv} 
+\begin{axis}[legend style={anchor=east,font=\bf\sffamily\fontsize{7}{8}\selectfont,
+          at={(1.05,1.25)},
+          inner sep=1pt,
+          draw=none,
+          fill=white,
+          fill opacity=.9,
+          align=left,
+          text opacity=1,
+          legend cell align={left},
+          text=black,},
+    axis line style={black, thick},
+    % axis background/.style={
+    %   shade,top color=transparent!5,bottom color=transparent!1},
+    width=\HGT, 
+    height=\HGT,
+    scale only axis=true,
+    enlargelimits=0.010,
+    axis on top=true,
+    major tick length=0pt,
+    xmin=0,xmax=1,ymin=0,ymax=1,
+    xlabel={1-specificity},
+    ylabel={sensitivity},
+    grid=both,
+    grid style={dashed,semithick,draw=\GCOL, opacity=.25},
+]
+\addplot[ thick, smooth, mark=none, \COLA] table [x=fpr, y=tpr, col sep=comma]{\neronotrain};
+\addlegendentry{\NERO (no training): $91.7\%$};
+\addplot[forget plot, name path=lower, fill=none, draw=none, mark=none,] table [x=fpr, y=tpr_lower,col sep=comma]{\neronotrain};
+\addplot[forget plot, name path=upper, fill=none, draw=none, mark=none,] table [x=fpr, y=tpr_upper,col sep=comma]{\neronotrain};
+\addplot[forget plot,draw=none, fill=\COLA, opacity=0.2] fill between[of=lower and upper];
+
+\addplot[dashed, thick, smooth, mark=none, \COLB] table [x=fpr, y=tpr, col sep=comma]{\nerotrain};
+\addlegendentry{\NERO (with training): $97.7\%$};
+\addplot[forget plot, name path=lower, fill=none, draw=none, mark=none,] table [x=fpr, y=tpr_lower,col sep=comma]{\nerotrain};
+\addplot[forget plot, name path=upper, fill=none, draw=none, mark=none,] table [x=fpr, y=tpr_upper,col sep=comma]{\nerotrain};
+\addplot[forget plot,draw=none, fill=\COLB, opacity=0.2] fill between[of=lower and upper];
+
+\addplot[thick, smooth, mark=none, \COLC] table [x=fpr, y=tpr, col sep=comma]{\zerogpt};
+\addlegendentry{zerogpt: $70.8\%$};
+\addplot[forget plot, name path=lower, fill=none, draw=none, mark=none,] table [x=fpr, y=tpr_lower,col sep=comma]{\zerogpt};
+\addplot[forget plot, name path=upper, fill=none, draw=none, mark=none,] table [x=fpr, y=tpr_upper,col sep=comma]{\zerogpt};
+\addplot[forget plot,draw=none, fill=\COLC, opacity=0.2] fill between[of=lower and upper];
+
+
+
+\end{axis}
+\end{tikzpicture}};
+
+
+
+  \node[anchor=north west,label={[anchor=west,yshift=0.03in]130:{\large c.} Entropy-rate Distributions}] (N3) at ([yshift=-.15in]N1.south west) {\begin{tikzpicture}[anchor=center,font=\bf\sffamily\fontsize{8}{8}\selectfont]
+ \def\COLX{black}
+  \def\COLY{Red2}  
+    \def\COLZ{DodgerBlue3}  
+    \def\HGT{1.2in}
+    \def\BWD{3pt}
+\def\human{Figures/plotdata/humandist.csv} 
+\def\humanpdf{Figures/plotdata/humanpdf.csv} 
+\def\aithree{Figures/plotdata/ai2dist.csv} 
+\def\aithreepdf{Figures/plotdata/ai2pdf.csv} 
+\def\aifouro{Figures/plotdata/ai1dist.csv} 
+\def\aifouropdf{Figures/plotdata/ai1pdf.csv} 
+      \begin{axis}[legend style={anchor=east,font=\bf\sffamily\fontsize{6}{7}\selectfont,
+          at={(1,.8)},
+          inner sep=1pt,
+          draw=none,
+          fill=white,
+          fill opacity=.9,
+          align=left,
+          text opacity=1,
+          text=black,},
+    axis line style={black, thick},
+    % axis background/.style={
+    %   shade,top color=transparent!5,bottom color=transparent!1},
+    width=\HGT, 
+    height=\HGT,
+    scale only axis=true,
+    enlargelimits=0.010,
+    axis on top=true,
+    major tick length=0pt,
+    %xmin=0,xmax=1,%ymin=0,ymax=1,
+    ymax=4,
+    xmax=1.5,
+    xlabel={entropy [bits/letter]},
+    ylabel={probability},
+    grid=both,
+    grid style={dashed,semithick,draw=\GCOL, opacity=.25},
+]
+
+        \addplot[forget plot,
+          ybar,bar width=\BWD,
+    fill=\COLX,
+    fill opacity=0.35,
+    draw=none,
+        ] table [x=x,y=y,  col sep=comma] {\human};
+
+         \addplot[%forget plot,
+           smooth, very thick,
+    draw=\COLX,
+        ] table [x=x,y=y,  col sep=comma] {\humanpdf};
+                  \addlegendentry{Human gen.}
+
+        \addplot[forget plot,
+          ybar,bar width=\BWD,
+    fill=\COLY,
+    fill opacity=0.350,
+    draw=none,
+        ] table [x=x,y=y,  col sep=comma] {\aifouro};
+
+         \addplot[
+           smooth, very thick,
+    draw=\COLY,
+        ] table [x=x,y=y,  col sep=comma] {\aifouropdf};
+         \addlegendentry{AI GPT4o}
+
+        \addplot[forget plot,
+          ybar,bar width=\BWD,
+    fill=\COLZ,
+    fill opacity=0.35,
+    draw=none,
+        ] table [x=x,y=y,  col sep=comma] {\aithree};
+
+         \addplot[%forget plot,
+           smooth, very thick,
+    draw=\COLZ,
+        ] table [x=x,y=y,  col sep=comma] {\aithreepdf};
+         \addlegendentry{AI GPT3.5}
+\end{axis}
+\end{tikzpicture}};
+
+
+
+  \node[anchor=south west,label={[anchor=west,yshift=.1in]130:{\large d.} Variation with length}] (N4) at ($(N2.north west)!(N3.south)!(N2.south west)$) {\begin{tikzpicture}[anchor=center,font=\bf\sffamily\fontsize{8}{8}\selectfont]
+ \def\COLY{RubineRed}
+  \def\COLX{black}  
+    \def\COLZ{DarkOrange}  
+    \def\HGT{1.2in}
+    \def\BWD{3pt}
+\def\dataa{Figures/plotdata/entropylenai.csv} 
+\def\datah{Figures/plotdata/entropylenhuman.csv} 
+      \begin{axis}[legend style={          legend cell align={left},
+anchor=east,font=\bf\sffamily\fontsize{6}{7}\selectfont,
+          at={(1,.8)},
+          inner sep=1pt,
+          draw=none,
+          fill=white,
+          fill opacity=.9,
+          align=left,
+          text opacity=1,
+          text=black,},
+    axis line style={black, thick},
+    % axis background/.style={
+    %   shade,top color=transparent!5,bottom color=transparent!1},
+    width=\HGT, 
+    height=\HGT,
+    scale only axis=true,
+    enlargelimits=0.01,
+    axis on top=true,
+    major tick length=0pt,
+    %xmin=0,xmax=1,%ymin=0,ymax=1,
+    %xmax=1.5,
+    xlabel={text length},
+    ylabel={entropy [bits/letter]},
+    grid=both,
+    grid style={dashed,semithick,draw=\GCOL, opacity=.25},
+]
+
+
+         \addplot[%forget plot, 
+          only marks, mark=*, mark options={fill=\COLY, scale=.75,thick,draw=\COLY,opacity=.8,fill opacity=.5},
+        ] table [x=lens,y=entropy_rate,  col sep=comma] {\dataa};
+        \addlegendentry{AI gen.}
+
+        \addplot[%forget plot,
+          only marks, mark=*, mark options={fill=\COLX, scale=.75,thick,draw=\COLX,opacity=.8,fill opacity=.5},
+        ] table [x=lens,y=entropy_rate,  col sep=comma] {\datah};
+        \addlegendentry{human gen.}
+       
+
+\end{axis}
+\end{tikzpicture}};
+
+                 
+
+
+  
+
+  \node[anchor=north west,label={[anchor=west,xshift=-.8in,yshift=-.1in]130:{\large e.} Variation of entropy-rate across human literary genre}] (N5) at (N3.south west) {\begin{tikzpicture}[anchor=center,font=\bf\sffamily\fontsize{8}{8}\selectfont]
+ \def\COLX{black}
+  \def\COLY{DodgerBlue2}  
+    \def\COLZ{Green3}  
+    \def\HGT{.75in}
+    \def\WDT{2.85in}
+    \def\BWD{3pt}
+    \def\datacat{Figures/plotdata/category.csv}
+\def\datacat{Figures/plotdata/category.csv}
+\pgfplotstableread[col sep=comma]{\datacat}\datatable
+\begin{axis}[
+    legend style={
+        anchor=east,
+        font=\bf\sffamily\fontsize{7}{8}\selectfont,
+        at={(1,.8)},
+        inner sep=1pt,
+        draw=none,
+        fill=white,
+        fill opacity=.9,
+        align=left,
+        text opacity=1,
+        text=black,
+    },
+    axis line style={black, thick},
+    width=\WDT, 
+    height=\HGT,
+    scale only axis=true,
+    enlargelimits=true,
+    axis on top=true,
+    major tick length=0pt,
+%    xlabel={topics},
+    ylabel={5 pctile. entropy rate\\ \text{[bits/letter]}},
+    ybar,
+    ymin=0,
+    bar width=10pt,
+    xtick=data, % x positions are implicit: 0,1,2,...
+    xticklabels from table={\datatable}{collapsed_subject}, % labels from file
+    x tick label style={align=center,rotate=45,anchor=east,font=\bf\sffamily\fontsize{7}{8}\selectfont},
+    grid=both,
+    ylabel style={align=center,font=\bf\sffamily\fontsize{8}{9}\selectfont},
+    grid style={dashed,semithick,draw=\GCOL, opacity=.25},
+]
+
+\addplot+[fill=black,
+    error bars/.cd,
+    y dir=both,y explicit,error bar style={       % style of the vertical line
+            draw=red,           %   red
+            line width=2pt      %   very thick
+        },
+        error mark options={    % style of the little caps
+            draw=none , opacity=0          %   “none” → no caps at all
+        },
+] table [x expr=\coordindex,y=p5, y error=halfwidth] {\datatable}; % only y-values; x is implicit
+
+\end{axis}
+
+\end{tikzpicture}};
+
+\end{tikzpicture}

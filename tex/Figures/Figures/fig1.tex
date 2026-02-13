@@ -1,0 +1,16 @@
+ %\newcommand{\VSP}{\rule{0pt}{1.75ex}}
+ \begin{tikzpicture}[,font=\bf\fontsize{8}{8}\selectfont,->,>=latex',shorten >=1pt,auto,node distance=1.2cm,  scale=1 ,]
+  \node [circle, draw=black, dashed, thick ] (A) at (0.15,1.5) [align=center]{\bf Hidden\\\bf Process};
+\draw [fill=lightgray,draw=none,opacity=.9, xslant=0.0,yslant=.4, path fading=east] (0,0) -- (1.5,0) -- (1.5,2.5) -- (0,2.5) -- cycle;  
+\draw [xshift=-.8in,yshift=.275in,fill=lightgray,draw=none,opacity=.9, xslant=0.0,yslant=-.35, path fading=west] (0,0) -- (2,0) -- (2,2.5) -- (0,2.5) -- cycle;  
+\draw [xshift=-.635in,yshift=1.225in,fill=lightgray,draw=none,opacity=1, xslant=2.45,yslant=-.19, path fading=west] (0,0) -- (3,0) -- (3,.5) -- (0,.5) -- cycle; 
+
+%\draw [fill=gray,draw=none,opacity=1, path fading=south ,
+%xslant=0.0,yslant=.4] (0,-1) -- (2,-1) -- (2,-.2) -- (0,-.2) -- cycle;
+
+    \node [anchor=west] (B) at (A.east) [align=center]{\bf 01010010101011100101010101010$\boldsymbol{\cdots}$};
+   \node [anchor=north, text=Red4] (C) at ([yshift=-.1in]B.south) [align=left]{\textbullet~Entropy rate?};
+   \node [anchor=north west, text=Red4] (C1) at ([yshift=0.07in]C.south west) [align=left]{\textbullet~Convergence Rate of estimate?};  
+ \node [anchor=south, text=gray] (C) at (B.north) [align=center]{States are\\ hidden};
+   \node [anchor=north east,text=gray,font=\bf\fontsize{7}{8}\selectfont] (D) at ([yshift=.45in,xshift=-.1in]A.south west) [align=center]{ Stationary\\ergodic\\stochastic\\process};
+\end{tikzpicture} 

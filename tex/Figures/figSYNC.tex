@@ -1,0 +1,103 @@
+% ##########################################################
+\newcommand{\Vdist}{.5in}
+\def\COL{black!50}
+\def\COLA{Red4!20!black}
+\def\COLB{Red4!20!black}
+\def\COLC{Red4!20!black}
+\def\GCOL{gray!0}
+
+\definecolor{blcol}{RGB}{150,150,250}
+\definecolor{murcol}{RGB}{255,150,150}
+\definecolor{healcol}{RGB}{150,235,150}
+\definecolor{colzeta}{RGB}{250,250,200}
+\definecolor{leftpcol}{RGB}{200,255,200}
+\definecolor{rightpcol}{RGB}{200,200,255}
+\definecolor{boxcol}{RGB}{210,200,200}
+\definecolor{linecol}{RGB}{200,180,180}
+\definecolor{colplus}{RGB}{235,220,220}
+\definecolor{colinv}{RGB}{200,220,255}
+\definecolor{cof}{RGB}{219,144,71}
+\definecolor{pur}{RGB}{200,200,200}
+\definecolor{greeo}{RGB}{91,173,69}
+\definecolor{greet}{RGB}{52,111,72}
+ \definecolor{nodecol}{RGB}{180,180,220}
+ \definecolor{nodeedge}{RGB}{140,148,155}
+ \definecolor{nodeedgeb}{RGB}{240,148,155}
+  \definecolor{nodecolb}{RGB}{220,180,180}
+  \definecolor{nodecolc}{RGB}{180,220,180}
+  \definecolor{nodecolcD}{RGB}{100,160,100}
+  \definecolor{nodecolW}{RGB}{190,190,190}
+  \definecolor{edgecol}{RGB}{60,60,80}
+ \definecolor{nodecolD}{RGB}{140,140,180}
+  \definecolor{nodecolbD}{RGB}{180,140,140}
+ % ##########################################################
+% ##########################################################
+\tikzset{srule/.style={ semithick, opacity=.8, Red1, text opacity=1, text=gray}}
+\tikzset{axstyle/.style={ black, opacity=1,  thick, rounded corners=0pt}}
+\tikzset{%
+fshadow/.style={      preaction={
+         fill=black,opacity=.2,
+         path fading=circle with fuzzy edge 20 percent,
+         transform canvas={xshift=1mm,yshift=-1mm}
+       }}
+}
+% ##########################################################
+% ##########################################################
+\tikzset{oplus/.style={path picture={% 
+      \draw[black]
+       (path picture bounding box.south) -- (path picture bounding box.north) 
+       (path picture bounding box.west) -- (path picture bounding box.east);
+      }}} 
+% ##########################################################
+% ##########################################################
+\tikzset{%
+  highlight/.style={draw=Red4,rectangle,rounded corners=1pt, opacity=1,fill=gray!10,thick,inner sep=-1.25pt,on background layer,fill opacity=.3}
+}
+\tikzset{%
+  highlightg/.style={draw=DodgerBlue4,rectangle,rounded corners=1pt, opacity=1,fill=gray!10,thick,inner sep=-1.25pt,on background layer,fill opacity=.3}
+}
+% 
+% ##################################
+\def\SCALE{1.5}
+\newcommand{\Gone}{%
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1.2cm,
+                    semithick,scale=\SCALE,font=\bf\fontsize{6}{6}\selectfont]
+  \tikzstyle{every state}=[fill=nodecol,draw=nodeedge,text=black,minimum size=3, text width=2,scale=\SCALE,fshadow]
+  \node[state] (A)         []           {$\mspace{-6mu}q_0$};
+  \node[state]         (B) [right of=A] {$\mspace{-6mu}q_1$};
+  \path (A) edge   [draw=edgecol,bend left]           node {$\sigma_1\vert 0.15$} (B)
+        (A) edge [draw=edgecol,in=120,out=60,loop,left] node [xshift=-.1in,yshift=-.1in]{$\sigma_0\vert 0.85$} (A)
+        (B) edge [draw=edgecol,in=60,out=120,loop,right] node [xshift=.1in,yshift=-.1in]{$\sigma_0\vert 0.25$} (B)
+            edge   [draw=edgecol,bend left]           node {$\sigma_1\vert 0.75$} (A);
+\end{tikzpicture}
+}
+% ##################################
+% ##################################
+\newcommand{\Gtwo}{%
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1.2cm,
+                    semithick,scale=\SCALE,font=\bf\fontsize{6}{6}\selectfont]
+  \tikzstyle{every state}=[fill=nodecolb,draw=nodeedgeb,text=black,minimum size=3, text width=2,scale=\SCALE,fshadow]
+  \node[state] (A)         []           {$\mspace{-6mu}q_0$};
+  \node[state]         (B) [right of=A] {$\mspace{-6mu}q_1$};
+  \path (A) edge   [draw=edgecol,bend left]           node {$\sigma_1\vert 0.15$} (B)
+        (A) edge [draw=edgecol,in=120,out=60,loop,left] node [xshift=-.1in,yshift=-.1in]{$\sigma_0\vert 0.85$} (A)
+        (B) edge [draw=edgecol,in=60,out=120,loop,right] node [xshift=.1in,yshift=-.1in]{$\sigma_1\vert 0.75$} (B)
+            edge   [draw=edgecol,bend left]           node {$\sigma_0\vert 0.25$} (A);
+\end{tikzpicture}
+}
+% ##################################
+
+
+\begin{tikzpicture}[scale=1.5,font=\bf \sffamily \fontsize{6}{6}\selectfont]
+
+
+\node [] (A)  {\Gtwo};
+\node [] (aa) at (A.south)  {Synchronizable};
+
+\node [anchor=west] (B) at ([xshift=.05in]A.east)  {\Gone};
+
+\node [] (bb) at (B.south)  {Non-synchronizable};
+
+
+
+\end{tikzpicture}

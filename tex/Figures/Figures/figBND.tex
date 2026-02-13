@@ -1,0 +1,125 @@
+\def\HGT{1.5in}
+\def\WDT{2.85in}
+\def\SCALE{1}
+\def\datafile{Figures/alph27.dat}
+\begin{tikzpicture}[font=\bf \sffamily \fontsize{6}{6}\selectfont]
+ \pgfplotsset{every axis legend/.append style={
+at={(0.265,0.625)},
+anchor=south}}
+\begin{semilogxaxis}[ title={(a) Alphabet Size = $27$}, title style={yshift=-.1in},legend cell align=left,
+legend style={ xshift=1in, yshift=-.1in, draw=white, fill= gray, fill opacity=0.2, 
+text opacity=1,},
+axis line style={black, opacity=0.5,  thick, rounded corners=0pt},
+axis on top=false, 
+scale=1,grid style={dashed, gray!40},
+enlargelimits=false, 
+width=\WDT, 
+height=\HGT,     % size of the image
+% xmin=100
+,ymax=1.5, 
+ ymin=0.00001,
+% ymax=17,
+semithick,grid,
+axis background/.style={top color=gray!0,},
+xlabel={input length [\# of symbols]},
+yticklabel style={xshift=.025in},
+ylabel={error [bits / letter]},
+ylabel style={yshift=-.2in},
+ xlabel style={yshift=.1in},
+    scaled x ticks = false,
+      x tick label style={/pgf/number format/fixed,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+      }
+  ];
+% 
+%\input{Figures/beta.tex}
+%\node at (axis cs:2.75,.25) {0.25}; 
+%\node at (axis cs:3.75,.074) {0.074};
+%\node at (axis cs:4.75,.023) {0.023};
+
+%\addplot[ thick, mark options={opacity=0.8},mark=*,mark size=1.25pt,red,mark options={
+%scale=1.5,fill=green,draw=black
+%}]table[x index={0}, y expr=(\thisrowno{1}*\SCALE)]
+ % {\datafile};
+
+\addplot[  thick, Red4]table[x index={0}, y expr=(\thisrowno{1}*\SCALE)]
+  {\datafile};
+\addlegendentry{95\% confidence};
+
+\addplot[  thick, DodgerBlue4]table[x index={2}, y expr=(\thisrowno{3}*\SCALE)]
+  {\datafile};
+\addlegendentry{99\% confidence};
+
+
+\node [circle, fill=none, draw=black, inner sep=1pt] (a) at (axis cs:5e6, .9) {};
+\draw[gray, thin](a -| current plot begin) -- (a) node [midway,sloped, yshift=0.02in, below, text=black!80, xshift=0.08in, font=\bf \sffamily \fontsize{6}{6}\selectfont] {$0.9$};
+\draw[gray, thin]  (a) -- (current plot end -| a) node [midway,sloped, yshift=-0.03in, above, text=black!80, xshift=0.03in, font=\bf \sffamily \fontsize{6}{6}\selectfont] {$5\times 10^6$};
+
+\end{semilogxaxis}
+\end{tikzpicture}
+
+
+
+
+\vspace{2pt}
+ 
+
+\def\SCALE{1}
+\def\datafile{Figures/alph2.dat}
+\begin{tikzpicture}[font=\bf \sffamily \fontsize{6}{6}\selectfont]
+ \pgfplotsset{every axis legend/.append style={
+at={(0.265,0.625)},
+anchor=south}}
+\begin{semilogxaxis}[ title={(b) Alphabet Size = $2$}, title style={yshift=-.1in},legend cell align=left,
+legend style={ xshift=1in, yshift=-0.1in, draw=white, fill= gray, fill opacity=0.2, 
+text opacity=1,},
+axis line style={black, opacity=0.5,  thick, rounded corners=0pt},
+axis on top=false, 
+scale=1,grid style={dashed, gray!40},
+enlargelimits=false, 
+width=\WDT, 
+height=\HGT,     % size of the image
+% xmin=100
+,ymax=.95, 
+ ymin=0.00001,
+% ymax=17,
+semithick,grid,
+axis background/.style={top color=gray!0,},
+xlabel={input length [\# of symbols]},
+yticklabel style={xshift=.025in},
+ylabel={error [bits / letter]},
+ylabel style={yshift=-.2in},
+ xlabel style={yshift=.1in},
+    scaled x ticks = false,
+      x tick label style={/pgf/number format/fixed,
+      /pgf/number format/1000 sep = \thinspace % Optional if you want to replace comma as the 1000 separator 
+      } 
+  ];
+% 
+%\input{Figures/beta.tex}
+%\node at (axis cs:2.75,.25) {0.25};
+%\node at (axis cs:3.75,.074) {0.074};
+%\node at (axis cs:4.75,.023) {0.023};
+
+%\addplot[ thick, mark options={opacity=0.8},mark=*,mark size=1.25pt,red,mark options={
+%scale=1.5,fill=green,draw=black
+%}]table[x index={0}, y expr=(\thisrowno{1}*\SCALE)]
+ % {\datafile};
+
+\addplot[  thick, Red4]table[x index={0}, y expr=(\thisrowno{1}*\SCALE)]
+  {\datafile};
+\addlegendentry{95\% confidence};
+
+\addplot[  thick, DodgerBlue4]table[x index={2}, y expr=(\thisrowno{3}*\SCALE)]
+  {\datafile};
+\addlegendentry{99\% confidence};
+
+
+\node [circle, fill=none, draw=black, inner sep=1pt] (a) at (axis cs:5e6, .22) {};
+\draw[gray, thin](a -| current plot begin) -- (a) node [midway,sloped, yshift=-0.02in, above, text=black!80, xshift=0.08in, font=\bf \sffamily \fontsize{6}{6}\selectfont] {$0.22$};
+\draw[gray, thin]  (a) -- (current plot end -| a) ;
+
+
+\end{semilogxaxis}
+\end{tikzpicture}
+

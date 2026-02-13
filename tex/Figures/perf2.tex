@@ -1,0 +1,445 @@
+\begin{tikzpicture}[text=gray]
+  \gdef\NERO{NERO\xspace}
+
+\clip (-.81in,1.3in) rectangle (2.5in,-4.76in);
+  \def\COLL{black}
+\def\GCOL{black!70}
+ \def\COLA{Blue2}
+  \def\COLB{Red3}  
+    \def\COLC{black}  
+    \def\COLD{Orchid2}
+    \def\COLX{Red3}
+    \def\COLwX{MediumBlue}
+\def\HGT{1.2in}
+\node[,label={[anchor=west,xshift=.05in,yshift=.15in,text=\COLL]130:{\large a.} ROC (with 95\% CI)}] (N1) at (0,0) {
+  \begin{tikzpicture}[font=\sffamily\fontsize{8}{8}\selectfont]
+\def\neronotrain{../../code/paper_results/plotdata/nero_ALL_notraining_.csv} 
+\def\nerotrain{../../code/paper_results/plotdata/nero_ALL_trained.csv} 
+\def\zerogpt{../../code/paper_results/plotdata/percentage_ALL_.csv}
+\def\perplexity{../../code/paper_results/plotdata/perplexity_ALL_.csv}
+      \begin{axis}[legend style={anchor=east,font=\bf\sffamily\fontsize{7}{8}\selectfont,
+          at={(1.05,1.30)},
+          inner sep=1pt,
+          draw=none,
+          fill=white,
+          fill opacity=.9,
+          align=left,
+          text opacity=1,
+          legend cell align={left},
+          text=black,},
+    axis line style={black, thick},
+    % axis background/.style={
+    %   shade,top color=transparent!5,bottom color=transparent!1},
+    width=\HGT, 
+    height=\HGT,
+    scale only axis=true,
+    enlargelimits=0.010,
+    axis on top=true,
+    major tick length=0pt,
+    xmin=-.01,xmax=1,ymin=0,ymax=1.01,
+    xlabel={1-specificity},
+    ylabel={sensitivity},
+    grid=both,
+    grid style={dashed,semithick,draw=\GCOL, opacity=.25},
+]
+
+
+ 
+\addplot[ , very thick, mark=none, \COLA] table [x=fpr, y=tpr, col sep=comma]{\neronotrain};
+\addlegendentry{\NERO (no training): $82.7\%$};
+\addplot[forget plot, name path=lower, fill=none, draw=none, mark=none,] table [x=fpr, y expr=0.99*\thisrow{tpr_lower},col sep=comma]{\neronotrain};
+\addplot[forget plot, name path=upper, fill=none, draw=none, mark=none,] table [x=fpr,  y expr=1.01*\thisrow{tpr_upper},col sep=comma]{\neronotrain};
+\addplot[forget plot,draw=none, fill=\COLA, opacity=0.2] fill between[of=lower and upper];
+
+\addplot[ very thick,  mark=none, \COLB] table [x=fpr, y=tpr, col sep=comma]{\nerotrain};
+\addlegendentry{\NERO (with training): $98.9\%$};
+\addplot[forget plot, name path=lower, fill=none, draw=none, mark=none,] table [x=fpr, y expr=0.99*\thisrow{tpr_lower},col sep=comma]{\nerotrain};
+\addplot[forget plot, name path=upper, fill=none, draw=none, mark=none,] table [x=fpr,  y expr=1.01*\thisrow{tpr_upper},col sep=comma]{\nerotrain};
+\addplot[forget plot,draw=none, fill=\COLB, opacity=0.2] fill between[of=lower and upper];
+
+
+\addplot[very thick,dashed, smooth, mark=none, \COLD] table [x=fpr, y=tpr, col sep=comma]{\perplexity};
+\addlegendentry{perplexity (HowGPT): $82.3\%$};
+\addplot[forget plot, name path=lower, fill=none, draw=none, mark=none,] table [x=fpr, y expr=0.99*\thisrow{tpr_lower},col sep=comma]{\perplexity};
+\addplot[forget plot, name path=upper, fill=none, draw=none, mark=none,] table [x=fpr,  y expr=1.01*\thisrow{tpr_upper},col sep=comma]{\perplexity};
+\addplot[forget plot,draw=none, fill=\COLD, opacity=0.2] fill between[of=lower and upper];
+
+ \addplot[thick, dashed,  mark=none, \COLC] table [x=fpr, y=tpr, col sep=comma]{\zerogpt};
+\addlegendentry{ZeroGPT: $94.9\%$};
+\addplot[forget plot, name path=lower, fill=none, draw=none, mark=none,] table [x=fpr, y expr=0.99*\thisrow{tpr_lower},col sep=comma]{\zerogpt};
+\addplot[forget plot, name path=upper, fill=none, draw=none, mark=none,] table [x=fpr, y expr=1.01*\thisrow{tpr_upper},col sep=comma]{\zerogpt};
+\addplot[forget plot,draw=none, fill=\COLC, opacity=0.2] fill between[of=lower and upper];
+
+\end{axis}
+\end{tikzpicture}};
+
+\def\scatter{../../code/paper_results/plotdata/auc_scatter_pgf.csv}
+\def\summary{../../code/paper_results/plotdata/auc_summary_pgf.csv}
+\def\timepoints{../../code/paper_results/plotdata/pointsall.csv}
+%\def\timepoints{../../code/paper_results/plotdata/points.csv}
+\def\scurve{../../code/paper_results/plotdata/curve_and_bands.csv}
+\def\lengthdata{../../code/paper_results/plotdata/lengthcomp.csv}
+
+\node[,label={[anchor=south west,xshift=.0in,yshift=.1in,align=left,text=\COLL]130:{\large b.} AUC (Cohort-Variation$^\star$)\\{$\phantom{X}$\itshape \fontsize{7}{7}\selectfont $^\star 381$ cohort combinations}}] (N2) at ([xshift=.8in,yshift=1.03in]N1.south east) {
+\begin{tikzpicture}[font=\sffamily\fontsize{8}{8}\selectfont]
+      \begin{axis}[legend style={anchor=east,font=\bf\sffamily\fontsize{7}{8}\selectfont,
+          at={(.8,1.250)},
+          inner sep=1pt,
+          draw=none,
+          fill=white,
+          fill opacity=.90,
+          align=left,
+          text opacity=1,
+          legend cell align={left},
+          text=black,},
+    axis line style={black, thick},
+    % axis background/.style={
+    %   shade,top color=transparent!5,bottom color=transparent!1},
+    width=\HGT, 
+    height=\HGT,
+    scale only axis=true,
+    %enlargelimits=0.010,
+    axis on top=true,
+    set layers,
+    major tick length=0pt,
+    %xmin=0,xmax=1,ymin=0,ymax=1,
+    %xlabel={1-specificity},
+    ylabel={AUC},
+    ylabel style={yshift=-.08in},
+    grid=both,
+    grid style={dashed,semithick,draw=\GCOL, opacity=.25},
+  % --- categorical x axis ---
+    xtick={0,1,2},
+    xticklabels={NERO, perplx., ZeroGPT},
+    xticklabel style={rotate=45, anchor=north east},%   xticklabel={NERO, Perpl, Perce}
+]
+
+ 
+        \def\OPC{.15}
+        \def\OPCA{.4}
+        \def\OPCB{.25}
+        \def\SCALE{.9}
+        \def\SCALEA{.4}
+% ------------------
+% NERO (x_center = 1)
+% ------------------
+\addplot[on layer=axis background,
+    only marks,
+    mark=square*,
+    mark options={draw=\COLB!70!black, fill=\COLB, scale=\SCALEA, opacity=\OPCB, fill opacity=\OPC},
+]
+table[
+    col sep=comma,
+    x expr=\thisrow{x_center} + \thisrow{x_jitter},
+    y=auc,
+    restrict expr to domain={\thisrow{x_center}}{-0.05:.05},
+]{\scatter};
+\addlegendentry{NERO-notraining}
+
+% ------------------
+% Perplexity (x_center = 2)
+% ------------------
+\addplot[on layer=axis background,
+    only marks,
+    mark=triangle*,
+    mark options={draw=\COLD!50!black, fill=\COLD, scale=\SCALE,  opacity=\OPCA,fill opacity=\OPC},
+]
+table[
+    col sep=comma,
+    x expr=\thisrow{x_center} + \thisrow{x_jitter},
+    y=auc,
+    restrict expr to domain={\thisrow{x_center}}{.95:1.05},
+]{\scatter};
+\addlegendentry{perplexity (HowGPT)}
+
+% ------------------
+% Percentage (x_center = 3)
+% ------------------
+\addplot[on layer=axis background,
+    only marks,
+    mark=*,
+    mark options={draw=\COLC!50!black, fill=\COLC, scale=\SCALE, opacity=\OPCA, fill opacity=\OPC,},
+]
+table[
+    col sep=comma,
+    x expr=\thisrow{x_center} + \thisrow{x_jitter},
+    y=auc,
+    restrict expr to domain={\thisrow{x_center}}{1.95:2.05},
+]{\scatter};
+\addlegendentry{ZeroGPT}
+
+\addplot[
+    only marks,
+    mark=*,
+    mark size=1.250pt,
+    mark options={fill=\COLwX, draw=\COLwX},
+    error bars/.cd,
+        y dir=both,
+        y explicit,
+        error bar style={\COLwX, thick},
+        %error mark options={rotate=90, scale=0}, % removes caps
+]
+table[
+    col sep=comma,
+    x expr=\thisrow{x}+.3,   % shift {0,1,2} -> {1,2,3} to match categories
+    y=mean,
+ y error plus expr=\thisrow{ci_hi} - 1.05*\thisrow{mean},
+    y error minus expr=\thisrow{mean} - 1.05*\thisrow{ci_lo},
+]{\summary};
+\end{axis}
+\end{tikzpicture}
+};
+
+
+
+% Requires in preamble:
+% \usepackage{pgfplots}
+% \pgfplotsset{compat=1.18}
+% \usepgfplotslibrary{dateplot}
+
+\node[,label={[anchor=north west,xshift=0in,yshift=.2in,text=\COLL]130:{\large c.} Birthtime Vs Performance}] (N3) at ([xshift=.85in,yshift=-1.2in]N1.south west) {
+\begin{tikzpicture}[font=\sffamily\fontsize{8}{8}\selectfont]
+\begin{axis}[
+    legend style={anchor=east,font=\bf\sffamily\fontsize{7}{8}\selectfont,
+          at={(.6,1.250)},
+          inner sep=1pt,
+          draw=none,
+          fill=white,
+          fill opacity=.9,
+          align=left,
+          text opacity=1,
+          legend cell align={left},
+          text=black,},
+    axis line style={black, thick},
+    date coordinates in=x,
+    width=\HGT,
+    height=\HGT,
+    scale only axis=true,
+    axis on top=true,
+    set layers,
+    major tick length=0pt,
+    ymin=0.45, ymax=0.84,
+    ylabel={$H$ \text{[bits/letter]}},
+    ylabel style={yshift=-.05in},
+    grid=both,
+    grid style={dashed,semithick,draw=\GCOL, opacity=.25},
+    xticklabel style={rotate=45, anchor=north east,font=\fontsize{7}{8}\selectfont},
+]
+
+% Points with y-error bars (std), no caps
+\addplot+[
+    only marks,
+    mark=*,
+    mark options={draw=black, fill=Yellow1,scale=.9},
+    error bars/.cd,
+        y dir=both,
+        y explicit,
+        error bar style={black, thin,opacity=.75},
+        %error mark options={scale=0.5},
+]
+table[
+    col sep=comma,
+    x=birthtime,
+    y=capability,
+    y error=std
+]{\timepoints};
+
+% Text labels (model names)
+\addplot[
+    only marks,
+    mark=none,
+    forget plot,
+    visualization depends on={value \thisrow{model} \as \Label},
+    nodes near coords={\Label},
+    nodes near coords style={
+        anchor=west,
+        xshift=5pt,
+        text=Blue1!70,text opacity=.6,
+        fill=white,fill opacity=.75,inner sep=0pt,
+        font=\bf\sffamily\fontsize{5}{6}\selectfont
+    },
+]
+table[
+    col sep=comma,
+    x=birthtime,
+    y=capability
+]{\timepoints};
+
+% Horizontal reference line at y=0.85 (red dashed), spanning axis range
+\addplot[red, dashed, thick] coordinates {(2022-01-01,0.79) (2027-01-01,0.79)} node [midway,above,font=\sffamily\fontsize{6}{6}\selectfont] {human};
+
+
+\addplot[
+    thick,
+    dashed,
+    black,
+]
+table[
+    col sep=comma,
+    x=date,
+    y=yhat
+]{\scurve};
+
+
+\end{axis}
+\end{tikzpicture}
+};
+
+
+
+
+% Preamble (once):
+% \usepackage{pgfplots}
+% \pgfplotsset{compat=1.18}
+
+
+\node[,label={[anchor=north west,xshift=0.1in,yshift=.215in,text=\COLL]130:{\large d.} Length dependence}] (N4) at ([xshift=2.58in,yshift=-1.185in]N1.south west) {\begin{tikzpicture}[font=\sffamily\fontsize{8}{8}\selectfont]
+\begin{semilogxaxis}[%
+    legend style={%
+        anchor=east,
+        font=\bfseries\sffamily\fontsize{7}{8}\selectfont,
+        at={(1,.3)},
+        inner sep=1pt,
+        draw=none,
+        fill=white,
+        fill opacity=.9,
+        align=left,
+        text opacity=1,
+        legend cell align={left},
+        text=black,
+    },
+    axis line style={black, thick},
+    width=\HGT,
+    height=\HGT,
+    scale only axis=true,
+    axis on top=true,
+    set layers,
+    major tick length=0pt,
+    ylabel={$H$ \text{[bits/letter]}},
+    ylabel style={yshift=-.02in},
+    grid=major,
+    grid style={dashed,semithick,draw=\GCOL, opacity=.25},
+    xlabel={text length [$10^3$ characters]},
+    xlabel style={xshift=-.05in},
+    xtick={1,10,50,100,125,150},
+    xticklabel style={rotate=45, anchor=north east},
+    xmode=log,
+xtick={1,10,100},
+xticklabels={$10^0$,$10^1$,$10^2$},
+minor x tick num=0,
+]
+
+% Human (line + points + symmetric CI half-widths, no caps)
+\addplot+[smooth,
+  thick,
+  \COLX,
+    mark=none,
+    error bars/.cd,
+        y dir=both,
+        y explicit,
+        error bar style={ thick},
+        %error mark options={scale=0},
+]
+table[
+    col sep=comma,
+    x=k,
+    y=human,
+    y error expr=\thisrow{human_ci},
+]{\lengthdata};
+\addlegendentry{Human}
+
+% AI (line + points + symmetric CI half-widths, no caps)
+\addplot+[smooth,
+  thick,
+  \COLA,
+    mark=none,
+    error bars/.cd,
+        y dir=both,
+        y explicit,
+        error bar style={thick},
+        %error mark options={scale=0},
+]
+table[
+    col sep=comma,
+    x=k,
+    y=ai,
+    y error expr=\thisrow{ai_ci},
+]{\lengthdata};
+\addlegendentry{AI}
+
+%\draw [dashed, black, thick] (axis cs: 1.5,.2) -- (axis cs: 1.5, .85);
+\draw [dashed, black, thick] (axis cs: 5,.2) -- (axis cs: 5, .85) node [midway,sloped,above,pos=.8] {5000};
+
+\end{semilogxaxis}
+\end{tikzpicture}
+};
+
+
+
+\node[,label={[anchor=north west,xshift=-1in,yshift=.125in,text=\COLL]130:{\large e.} Topic dependence  in human prose (Gutenberg)}] (N5) at ([xshift=1.72in,yshift=-.88in]N3.south west) {
+\begin{tikzpicture}[anchor=center,font=\sffamily\fontsize{8}{8}\selectfont]
+ \def\COLX{black}
+  \def\COLY{DodgerBlue2}  
+    \def\COLZ{Green3}  
+    \def\HGT{.6in}
+    \def\WDT{2.95in}
+    \def\BWD{7pt}
+    \def\datacat{Figures/plotdata/category1.csv}
+\def\datacat{Figures/plotdata/category2.csv}
+\pgfplotstableread[col sep=comma]{\datacat}\datatable
+\begin{axis}[
+    legend style={
+        anchor=east,
+        font=\sffamily\fontsize{7}{8}\selectfont,
+        at={(1,.80)},
+        inner sep=1pt,
+        draw=none,
+        fill=white,
+        fill opacity=.90,
+        align=left,
+        text opacity=1,
+        text=black,
+    },
+    axis line style={black, thick},
+    width=\WDT, 
+    height=\HGT,
+    scale only axis=true,
+    enlargelimits=true,
+    axis on top=true,
+    major tick length=0pt,
+%    xlabel={topics},
+    ylabel={$H$ \text{[bits/letter]}},
+    ybar,
+    ymin=0,
+    bar width=\BWD,
+    xtick=data, % x positions are implicit: 0,1,2,...
+    xticklabels from table={\datatable}{genre20}, % labels from file
+    x tick label style={align=center,text=\COLL,rotate=45,anchor=east,font=\bf\sffamily\fontsize{6}{6}\selectfont},
+    %grid=both,
+    grid=none,      % start with no grid
+    ymajorgrids,    % enable x-axis (vertical) grid lines
+    ylabel style={yshift=-.07in,align=center},
+    grid style={dashed,semithick,draw=\GCOL, opacity=.25},
+]
+
+\addplot+[line width=.5pt,fill=black!10,draw=black,
+    error bars/.cd,
+    y dir=both,y explicit,error bar style={       % style of the vertical line
+            draw=red,           %   red
+            line width=1.5pt      %   very thick
+        },
+        error mark options={    % style of the little caps
+            draw=none , opacity=0          %   “none” → no caps at all
+        },
+] table [x expr=\coordindex,y=Median Entropy Rate, y error=halfwidth] {\datatable}; % only y-values; x is implicit
+
+\end{axis}
+
+\end{tikzpicture}
+  };
+
+
+
+
+
+\end{tikzpicture}

@@ -1,0 +1,57 @@
+\documentclass[10pt, onecolumn, compsoc]{IEEEtran}
+\let\labelindent\relax
+\input{preamble_ieee.tex}
+\usepackage{mathtools}
+\usepackage{flushend}
+\newif\iftikzX
+\tikzXtrue
+%\tikzXfalse 
+\newif\ifFIGS  
+\FIGSfalse  
+\FIGStrue
+\def\EXTENDEDDATA{Extended Data\xspace}
+\def\SUPPLEMENTARY{Supplementary\xspace}
+\def\Methods{Methods}
+% ####################################
+\begin{document}  
+\begin{figure}
+  \tikzexternalenable 
+  \tikzsetnextfilename{perf}
+  \centering
+   \iftikzX   
+  \input{Figures/perf1}
+  \else
+  \includegraphics[width=.35\textwidth]{Figures/External/perf}
+  \fi
+\end{figure}
+
+
+
+
+\begin{figure}
+  \tikzexternalenable 
+  \tikzsetnextfilename{perfnew}
+  \centering
+   \iftikzX   
+  \input{Figures/perf2}
+  \else
+  \includegraphics[width=.35\textwidth]{Figures/External/perf}
+  \fi
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}  
