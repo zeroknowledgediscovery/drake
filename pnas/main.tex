@@ -1,0 +1,288 @@
+\PassOptionsToPackage{usenames,x11names, dvipsnames, svgnames}{xcolor}
+\documentclass[9pt,twocolumn,oneside]{pnas-new}
+% Use the lineno option to display guide line numbers if required.
+\setboolean{displaywatermark}{false}
+\usepackage{orcidlink}   % <— add this
+% \input{preamble_ieee.tex}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+%\usepackage{pdfpages}
+%\usepackage{shellesc}
+%\ShellEscape{pdflatex si}
+\usetikzlibrary{shapes,calc,shadows,fadings,arrows,decorations.pathreplacing,automata,positioning}
+\usepackage{hyperref}
+\usetikzlibrary{external}
+\tikzexternalize[prefix=./Figures/External/]% activate
+\tikzexternaldisable 
+\usetikzlibrary{decorations.text}
+\usepgfplotslibrary{colorbrewer} 
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{fillbetween}
+%\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage[algo2e,ruled,vlined]{algorithm2e}
+
+\usepackage{mathtools}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+
+\newtheorem{exmpl}{Example}
+\newtheorem{rem}{Remark}
+\newtheorem{notn}{Notation}
+\usepackage{xspace}
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}%
+
+\newcommand{\set}[1]{\left\{ #1 \right\}}
+\newcommand{\paren}[1]{\left( #1 \right)}
+\newcommand{\bracket}[1]{\left[ #1 \right]}
+% \newcommand{\norm}[1]{\left\Vert #1 \right\Vert}
+\newcommand{\nrm}[1]{\left\llbracket{#1}\right\rrbracket}
+\newcommand{\parenBar}[2]{\paren{#1\,{\left\Vert\,#2\right.}}}
+\newcommand{\parenBarl}[2]{\paren{\left.#1\,\right\Vert\,#2}}
+\newcommand{\ie}{$i.e.$\xspace}
+\newcommand{\addcitation}{\textcolor{black!50!red}{\textbf{ADD CITATION}}}
+\newcommand{\subtochange}[1]{{\color{black!50!green}{#1}}}
+\newcommand{\tobecompleted}{{\color{black!50!red}TO BE COMPLETED.}}
+
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\expect}{\mathbf{E}}
+\DeclareMathOperator*{\var}{\mathbf{Var}}
+
+\newcommand{\pIn}{\mathscr{P}_{\textrm{in}}}
+\newcommand{\pOut}{\mathscr{P}_{\textrm{out}}}
+\newcommand{\aIn}[1][\Sigma]{#1_{\textrm{in}}}
+\newcommand{\aOut}[1][\Sigma]{#1_{\textrm{out}}}
+\newcommand{\xin}[1]{#1_{\textrm{in}}}
+\newcommand{\xout}[1]{#1_{\textrm{out}}}
+
+\newcommand{\R}{\mathbb{R}} % Set of real numbers
+\newcommand{\F}[1][]{\mathcal{F}_{#1}}
+\newcommand{\SR}{\mathcal{S}} % Semiring of sets
+\newcommand{\RR}{\mathcal{R}} % Ring of sets
+\newcommand{\N}{\mathbb{N}} % Set of natural numbers (0 included)
+
+\newcommand{\pitilde}{\widetilde{\pi}}
+\newcommand{\Pitilde}{\widetilde{\Pi}}
+
+\newcommand{\Pp}[1][n]{\mathscr{P}^+_{#1}}
+%% ## Equation Space Control---------------------------
+\def\EQSP{2pt}
+\newcommand{\mltlne}[2][\EQSP]{\begingroup\setlength\abovedisplayskip{#1}\setlength\belowdisplayskip{#1}\begin{equation}\begin{multlined} #2 \end{multlined}\end{equation}\endgroup\noindent}
+\newcommand{\cgather}[2][\EQSP]{\begingroup\setlength\abovedisplayskip{#1}\setlength\belowdisplayskip{#1}\begin{gather} #2 \end{gather}\endgroup\noindent}
+\newcommand{\cgathers}[2][\EQSP]{\begingroup\setlength\abovedisplayskip{#1}\setlength\belowdisplayskip{#1}\begin{gather*} #2 \end{gather*}\endgroup\noindent}
+\newcommand{\calign}[2][\EQSP]{\begingroup\setlength\abovedisplayskip{#1}\setlength\belowdisplayskip{#1}\begin{align} #2 \end{align}\endgroup\noindent}
+\newcommand{\caligns}[2][\EQSP]{\begingroup\setlength\abovedisplayskip{#1}\setlength\belowdisplayskip{#1}\begin{align*} #2 \end{align*}\endgroup\noindent}
+\newcommand{\mnp}[2]{\begin{minipage}{#1}#2\end{minipage}} 
+\newif\iftikzX
+\tikzXtrue
+\tikzXfalse 
+\newif\ifFIGS  
+\FIGSfalse  
+\FIGStrue
+\cfoot{\scriptsize\thepage}
+\lfoot{} 
+\rfoot{} 
+\def\EXTENDEDDATA{Extended Data\xspace}
+\def\SUPPLEMENTARY{Supplementary\xspace}
+\def\Methods{Methods\xspace}
+\newcounter{Dcounter}
+\setcounter{Dcounter}{1}
+\newcommand{\DQS}[1]{
+    \marginpar{
+      \tikzexternaldisable 
+      \tikz{
+        \node[
+          rounded corners=5pt,
+          draw=none,
+          thick,
+          fill=black!10,
+          font=\sffamily\fontsize{7}{8}\selectfont
+        ]{\mnp{.3in} {\color{Red3}\raggedright  \#\theDcounter.~#1}}; 
+      }
+    }
+  \stepcounter{Dcounter}\xspace
+}
+
+\newcommand{\K}{K}
+\newcommand{\Hamming}{\mathrm{H}}
+\newcommand{\SIapp}{SI Appendix}
+
+
+\templatetype{pnasbriefreport} % Choose template
+% {pnasresearcharticle} = Template for a two-column research article
+% {pnasmathematics} %= Template for a one-column mathematics article
+% {pnasinvited} %= Template for a PNAS invited submission
+\def\TITLE{Why Evolution Operates Near One Mutation per Genome per Generation}
+\title{\TITLE}
+
+% Use letters for affiliations, numbers to show equal authorship (if applicable) and to indicate the corresponding author
+%\author[a]{Ross Schmidt\orcidlink{0009-0005-1089-5922}}
+%\author[b,1,2]{Author Two}
+\author[a]{Ishanu Chattopadhyay\orcidlink{0000-0001-8339-8162}}
+
+\affil[a]{University of Kentucky}
+%\affil[b]{Affiliation Two}
+%\affil[c]{Affiliation Three}
+
+% Please give the surname of the lead author for the running footer
+\leadauthor{Chattopadhyay}
+
+% Please include corresponding author, author contribution and author declaration information
+\authorcontributions{ IC conceived of research, implemented the algorithm, wrote the paper and procured suppport.}
+\authordeclaration{Authors have no competing interests.}
+%\equalauthors{\textsuperscript{1}A.O.(Ross) contributed equally to this work with A.T. (Author Two) (remove if not applicable).}
+\correspondingauthor{\textsuperscript{2}To whom correspondence should be addressed. E-mail: ishanu\_ch@uky.edu}
+
+% At least three keywords are required at submission. Please provide three to five keywords, separated by the pipe symbol
+\keywords{biological evolution $|$ %% AI-generated text detection   $|$
+mutation rate  $|$  algorithmic complexity  $|$ Drake's rule }
+%% \keywords{entropy rate AI-generated text detection large language models $|$        algorithmic complexity $|$ probabilistic finite-state automata}
+
+\begin{abstract}
+Across organisms and viruses, the per-site mutation rate scales inversely with genome length, yielding an approximately constant number of mutations per genome per generation (Drake’s rule). Existing explanations emphasize biochemical fidelity constraints or population-genetic error-threshold arguments that limit mutation from above. Here we provide a complementary, mechanism-independent account based on variation supply. Treating mutation as a blind local perturbation process, we ask which mutation rates maximize the expected rate of producing variants that are atypical relative to the mutation kernel itself, and therefore available for selective amplification rather than drift into mutational background. Using counting bounds for the fraction of such mutation-atypical outcomes within Hamming neighborhoods and combining them with an independent per-site mutation model, we obtain an explicit discovery-rate expression that is maximized when the per-genome mutation intensity $T = n\mu$ is $O(1)$, with a peak near $T \approx 1$. Consequently, the optimal per-site rate scales as $\mu^\star = (1 + o(1))/n$. These results derive Drake’s rule from a generic supply--destruction tradeoff under local stochastic perturbations, complementing fidelity- and stability-based perspectives.
+\end{abstract}
+
+\dates{This manuscript was compiled on \today}
+\doi{\url{www.pnas.org/cgi/doi/10.1073/pnas.XXXXXXXXXX}}
+
+\begin{document}  
+
+\maketitle
+\thispagestyle{firststyle}
+\ifthenelse{\boolean{shortarticle}}{\ifthenelse{\boolean{singlecolumn}}{\abscontentformatted}{\abscontent}}{}
+
+\firstpage[6]{4} 
+% Use \firstpage to indicate which paragraph and line will start the second page and subsequent formatting. In this example, there are a total of 11 paragraphs on the first page, counting the first level heading as a paragraph. The value {12} represents the number of the paragraph starting the second page. If a paragraph runs over onto the second page, include a bracket with the paragraph line number starting the second page, followed by the paragraph number in curly brackets, e.g. "\firstpage[4]{11}".
+
+
+% If your first paragraph (i.e. with the \dropcap) contains a list environment (quote, quotation, theorem, definition, enumerate, itemize...), the line after the list may have some extra indentati
+
+
+Mutation injects randomness; selection preserves and amplifies structure. Evolution therefore operates under a fundamental tension between entropy production and entropy suppression. A striking empirical regularity across diverse taxa is that the per-site mutation rate $\mu$ scales approximately as $1/n$, where $n$ is genome length, so the per-genome mutation rate $U=n\mu$ is roughly constant. This phenomenon, observed from RNA viruses to eukaryotes, is known as Drake’s rule~\cite{Drake1991,Lynch2010,SniegowskiRaynes2013,Hershberg2015}.
+
+Standard explanations of Drake’s rule fall into two broad categories. One emphasizes biochemical constraints and tradeoffs in replication fidelity, proofreading, and energetic cost~\cite{Lynch2010}. The other emphasizes the population-genetic consequences of excessive mutation, most prominently Eigen’s error-threshold framework~\cite{Eigen1971}, in which high mutation loads destabilize inherited information and limit the maintenance of adapted structure. These approaches provide important insight and useful upper bounds, but they primarily explain why mutation rates cannot be too large. They do not, by themselves, explain why evolution repeatedly operates near a particular scaling regime with $U=O(1)$.
+
+Here we pursue a complementary route that is upstream of selection and does not invoke biochemical detail, explicit fitness landscapes, or equilibrium population genetics. We ask: given a blind local mutation mechanism, at what mutation load is the \emph{supply rate} of statistically exceptional variants maximized? The point is not that evolution seeks exceptionality per se, but that selection can only act on what mutation supplies. If mutation predominantly produces outcomes that are typical under its own kernel, then repeated mutation pushes lineages toward the kernel's typical set, and accumulated organization is continually eroded into mutational background; we descend into noise devoid of structure making life impossible. Any sustained adaptive process therefore requires a nonzero supply of outcomes that are atypical relative to mutation alone, since these are the only candidates that can be preferentially retained rather than washed out.
+
+Our starting observation is that mutation induces a natural statistical model for an offspring relative to its parent. For a parent genome $x\in[q]^n$, an $m$-mutation restricts the offspring $y$ to the Hamming sphere $H_m(x)$, the set of sequences at Hamming distance $m$ from $x$. Under the mutation-induced model that is uniform over $H_m(x)$, a typical draw requires $\log|H_m(x)|$ bits to specify once the radius is fixed, and
+\[
+|H_m(x)|=\binom{n}{m}(q-1)^m
+\]
+grows rapidly with $m$. This immediately implies a notion of typicality: at a given radius, most outcomes resemble typical draws from the mutation kernel, and only a small fraction are exceptional relative to that kernel. In particular, the larger the neighborhood, the thinner the tail of mutation-atypical outcomes within it.
+
+
+We formalize this atypicality or exceptionality relative to the mutation-induced model on $H_m(x)$ using randomness deficiency (Definition~S1 in the SI Appendix), which measures how much rarer an outcome is than a typical draw from the same model. Rarity here is not a proxy for fitness; rather, being rare relative to the mutation kernel is what makes an outcome statistically distinguishable from mutational background and therefore \emph{available}, in principle, for selective amplification. A mutant is called a \emph{net structure discovery} if its deficiency exceeds a margin $\Delta$ (Def.~\ref{def:si:discovery}). A two-part coding/counting argument (Theorem~S1 and Lemma~S1) implies that, for typical parents, the fraction of $\Delta$-exceptional outcomes at radius $m$ scales as $2^{-\Delta}/|H_m(x)|$ up to polylogarithmic factors; this ``typical'' qualifier is in a counting/combinatorial sense (formalized in the SI Appendix) and is not an empirical claim that biological genomes are algorithmically random. We then combine this typical-case rarity with an independent per-site mutation model $M\sim\mathrm{Binomial}(n,\mu)$ to define an expected discovery rate $\Phi(\mu)$ that averages the $\Delta$-exceptional probability over mutation radii (Eq.~S14). Optimizing $\Phi(\mu)$ yields an interior optimum at per-genome mutation intensity $T=n\mu=O(1)$ (Theorem~S2), and in particular,
+\[
+\mu^\star=\frac{1+o(1)}{n}.
+\]
+Thus Drake’s rule emerges as a mechanism-independent supply optimum under blind local perturbation, complementing fidelity- and stability-based perspectives such as the error-threshold viewpoint.
+\DQS{we can prbbaly add a figure pnale showing genomes are not very compressible}
+
+
+
+
+\section*{Discussion}
+
+This work provides a mechanism-independent route to Drake's rule from the standpoint of variation supply. Under a minimal model in which mutation acts as a local stochastic perturbation on a discrete sequence space, we derived a typical-case bound on the probability that an $m$-mutant is statistically exceptional relative to its mutation neighborhood. Combining this rarity scaling with an independent per-site mutation model yields an explicit expression for the expected rate at which mutation supplies such exceptional variants, and shows that this rate is maximized when the expected number of mutations per genome per generation is $O(1)$. In the usual per-site parametrization, this corresponds to the inverse-length scaling $\mu^\star=\Theta(1/n)$.
+
+A useful way to express the optimum is through the per-genome mutation intensity
+\[
+T \;:=\; n\mu \;=\; \mathbb{E}[M],\qquad M\sim{\rm Binomial}(n,\mu),
+\]
+which acts as an intensive ``mutation temperature'' controlling the typical perturbation size. Figure~\ref{figsim} illustrates the scaling directly. In the left panel, $\Phi(\mu)$ plotted against the per-site rate $\mu$ exhibits a single interior maximum whose location shifts left as $n$ increases, consistent with $\mu^\star\propto 1/n$. In the right panel, plotting the same discovery rate against $T=n\mu$ collapses curves for different $n$ onto a common profile with a maximum near $T\approx 1$, matching the predicted $T e^{-T}$ dependence up to a multiplicative constant. The collapse emphasizes that the scaling law is most naturally stated as a constant optimal per-genome perturbation size.
+
+Our notion of discovery is defined relative to the mutation-induced model. We do not claim that the Hamming sphere is the globally optimal statistical model for an offspring, only that it is the model canonically induced by a local mutation mechanism on sequence space. The substantive claim is upstream: since mutation is the sole source of variation, selection can only act on what mutation supplies. If offspring were always typical draws from the mutation kernel, repeated perturbation would concentrate lineages toward the kernel's typical set, eroding accumulated organization into mutational background. Positive randomness deficiency provides a quantitative, mechanism-independent way to express the minimal sense in which a variant is not merely background mutational noise.
+
+The inverse-length scaling is robust to the choice of novelty margin $\Delta$, provided $\Delta$ does not grow with $n$ fast enough to dominate the one-step indexing cost $c(1)=\Theta(\log n)$. In particular, any fixed $\Delta$ or $\Delta=o(\log n)$ yields the same $\mu^\star=\Theta(1/n)$ scaling, with $\Delta$ affecting only the overall rate through the factor $2^{-\Delta}$.
+
+
+\begin{figure}[t]
+
+  \includegraphics[width=.3\textwidth]{Figures/temperature_scaling_sim.pdf}
+  
+\caption{
+Scaling and collapse of the discovery rate under independent per-site mutation.
+\textbf{a.} The expected discovery rate $\Phi(\mu)$ as a function of the per-site mutation rate $\mu$ for increasing genome lengths $n$ (theory and Monte Carlo simulation). The location of the maximum shifts left as $n$ increases, consistent with the inverse-length scaling $\mu^\star \propto 1/n$.
+\textbf{b.} The same discovery rate plotted against the per-genome mutation intensity $T = n\mu$. Curves for different $n$ collapse onto a common profile with a maximum near $T \approx 1$, matching the predicted $T e^{-T}$ dependence up to a multiplicative constant. This collapse demonstrates that the optimal regime corresponds to a constant $O(1)$ number of mutations per genome per generation.
+}\label{figsim}
+\end{figure}
+
+\subsection*{Why focus on discovery probability?}
+
+A natural objection to the approach here could be  to ask why evolution should be viewed as optimizing the probability of structure discovery, rather than a more direct quantity such as expected fitness gain~\cite{Lynch2010,SniegowskiRaynes2013,Hershberg2015}. We do not claim that natural selection explicitly maximizes the objective we write down, nor do we attempt to model fitness effects. Instead, the discovery probability isolates an upstream constraint imposed by mutation itself on the supply of potentially selectable variants. Mutation generates variants blindly, without access to fitness \emph{a priori}; selection acts only after variants have been supplied. In this setting it is well-posed to ask which per-site mutation rate maximizes the expected rate at which mutation produces outcomes that are atypical relative to the mutation kernel, since such outcomes are precisely those that can, in principle, be preferentially amplified rather than washed into the typical mutational background.
+
+It is also useful to situate this result relative to classical ``error threshold'' arguments. Eigen-type frameworks constrain mutation from above by requiring that inherited information remain stable under copying errors~\cite{Eigen1971}. Our result is different in kind: it identifies an interior optimum for the upstream \emph{supply} of mutation-atypical variants under blind local perturbations, without invoking a fitness landscape or equilibrium population genetics. The fact that both perspectives emphasize the $U=T=n\mu=O(1)$ regime suggests that Drake's rule may reflect the intersection of two generic pressures: fidelity constraints that limit loss of existing information and supply constraints that limit how often mutation produces variants sufficiently atypical to be preferentially amplified. In this sense, operating near one mutation per genome per generation can be read as a regime in which both retention and exploration remain nontrivial.
+
+\subsection*{Beyond biological specificity}
+
+Although motivated by biological evolution, the derivation depends only on three ingredients: a discrete configuration space, a local stochastic perturbation mechanism, and the requirement that adaptive progress requires access to outcomes that are atypical relative to the perturbation mechanism itself. Any system that explores a high-dimensional space via local random perturbations (a blind search unaware of downstream fitness functions) faces an analogous tradeoff: perturbations that are too small rarely generate statistically exceptional outcomes, while perturbations that are too large overwhelm any low-complexity deviation by pushing outcomes into exponentially large neighborhoods in which the probability of exceptionality is sharply suppressed. The resulting optimum selects an $O(1)$ intensive perturbation scale, made visible here by the collapse of discovery-rate curves under the parameter $T$ in Fig.~\ref{figsim}.
+
+
+
+In summary, the combinatorial growth of mutation neighborhoods suppresses the probability of mutation-atypical outcomes at large radii, and optimizing the resulting discovery rate under independent per-site mutation yields the observed inverse scaling $\mu^\star \sim 1/n$, equivalently an $O(1)$ mutation load per genome.
+
+
+
+\matmethods{
+%\paragraph{Data acquisition.}
+
+
+\paragraph{Approach.}
+We model mutation as a blind local perturbation on $[q]^n$: conditional on $m$ mutated sites, offspring are drawn uniformly from the Hamming sphere $H_m(x)$ around a parent $x$ (formal setup in the \SIapp, Sec.~\ref{sec:si:setup}). For any finite model class $S\ni y$, the two-part code bound gives
+\[
+\K(y) \;\le\; \K(S) + \log |S| + O(1),
+\]
+so describing $y$ via $S$ incurs an intrinsic indexing cost $\log|S|$. Applying this with $S=H_m(x)$ yields
+\[
+\K(y) \;\approx\; \K(x) + \log |H_m(x)|,
+\qquad
+|H_m(x)|=\binom{n}{m}(q-1)^m,
+\]
+so the combinatorial growth of the mutation neighborhood determines the typical description length of an $m$-mutant (details in the \SIapp, Eq.~\eqref{eq:si:twopart}--\eqref{eq:si:cm}).
+
+We quantify mutation-atypicality using randomness deficiency (Eq.~\eqref{eq:si:deficiency}), which measures how much rarer an outcome is than a typical draw from the mutation-induced model. A mutant is called a \emph{net structure discovery} if its deficiency exceeds a margin $\Delta$ (Def.~\ref{def:si:discovery}). A counting argument (Thm.~\ref{thm:si:upper}, Lem.~\ref{lem:si:tight}) shows that only a $2^{-\Delta}/|H_m(x)|$ fraction of outcomes at radius $m$ can be $\Delta$-exceptional, up to polylogarithmic factors.
+
+We then embed this local rarity within an independent per-site mutation model $M\sim\mathrm{Binomial}(n,\mu)$, averaging over mutation radii to obtain an expected discovery rate $\Phi(\mu)$ (Cor.~\ref{cor:si:Phi}). Analyzing the small-$\mu$ asymptotics of $\Phi(\mu)$ (Lem.~\ref{lem:si:smallmu}) and optimizing with respect to $\mu$ (Thm.~\ref{thm:si:opt}) yields an interior optimum at $n\mu=O(1)$ (Eq.~\eqref{eq:si:muopt}).
+
+
+
+
+%% \paragraph{Approach.}
+%% We model mutation as a blind local perturbation on $[q]^n$: conditional on $m$ mutated sites, offspring are drawn uniformly from the Hamming sphere $H_m(x)$ around a parent $x$ (formal setup in the \SIapp, Sec.~\ref{sec:si:setup}). The size of this sphere determines an intrinsic ``indexing cost'' $\log |H_m(x)|$, which grows combinatorially with $m$ (Eq.~\eqref{eq:si:hammingsphere}--\eqref{eq:si:cm}). We quantify mutation-atypicality using randomness deficiency (Eq.~\eqref{eq:si:deficiency}), which measures how much rarer an outcome is than a typical draw from the mutation-induced model. A mutant is called a \emph{net structure discovery} if its deficiency exceeds a margin $\Delta$ (Def.~\ref{def:si:discovery}). 
+
+%% A two-part coding/counting argument shows that only a vanishing fraction of sequences in $H_m(x)$ can be $\Delta$-exceptional, yielding both a universal upper bound and a typical tightness result for the discovery probability at fixed radius $m$ (Thm.~\ref{thm:si:upper}, Lem.~\ref{lem:si:tight}). We then embed this local rarity within an independent per-site mutation model $M\sim\mathrm{Binomial}(n,\mu)$, averaging over mutation radii to obtain an expected discovery rate $\Phi(\mu)$ (Cor.~\ref{cor:si:Phi}). Analyzing the small-$\mu$ asymptotics of $\Phi(\mu)$ (Lem.~\ref{lem:si:smallmu}) and optimizing with respect to $\mu$ (Thm.~\ref{thm:si:opt}) yields an interior optimum at $n\mu=O(1)$ and, in particular, $\mu^\star=(1+o(1))/n$ (Eq.~\eqref{eq:si:muopt}).
+
+
+
+
+
+
+
+
+
+%% \paragraph{Approach.}
+%% We model mutation as a blind local perturbation on $[q]^n$: conditional on $m$ mutated sites, offspring are drawn from the Hamming sphere $H_m(x)$ around a parent $x$ (definition and induced code length in \SIapp, Sec.~\ref{sec:si:setup} and Eq.~\eqref{eq:si:hammingsphere}--\eqref{eq:si:cm}). We measure mutation-atypicality using randomness deficiency (Eq.~\eqref{eq:si:deficiency}) and call a mutant a \emph{net structure discovery} if its deficiency exceeds a margin $\Delta$ (Def.~\ref{def:si:discovery}). A two-part coding/counting argument yields a universal upper bound and a typical tightness result for the probability of discovery at fixed radius $m$ (Thm.~\ref{thm:si:upper} and Lem.~\ref{lem:si:tight}). We then average over mutation radii under an independent per-site model $M\sim\mathrm{Binomial}(n,\mu)$ to define an expected discovery rate $\Phi(\mu)$ (Cor.~\ref{cor:si:Phi}), and optimize its small-$\mu$ asymptotics (Lem.~\ref{lem:si:smallmu} and Thm.~\ref{thm:si:opt}), yielding $\mu^\star=(1+o(1))/n$ (Eq.~\eqref{eq:si:muopt}).
+
+\paragraph{Code availability.} Code to generate the plots are available  \url{https://github.com/zeroknowledgediscovery/drake}
+}
+
+\showmatmethods{} % Display the Materials and Methods section
+\acknow{This work was supported in part by the Defense Advanced Research Projects Agency (DARPA) under the ARC program (HR0011-26-3-E016). Views, opinions, and findings expressed are solely those of the authors.}
+
+\showacknow{} % Display the acknowledgments section
+
+%##################################################
+% #######################################
+%#################################################
+%#################################################
+
+
+\bibliography{kevo}
+
+\include{SIpnas.tex}
+ 
+\end{document}

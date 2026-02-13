@@ -67,40 +67,41 @@ for n in ns:
 # -----------------------
 # Plot: Φ vs μ and Φ vs T
 # -----------------------
-fig = plt.figure(figsize=(8.6, 4.6))
-ax1 = fig.add_subplot(1, 2, 1)
-ax2 = fig.add_subplot(1, 2, 2)
+L=.9
+fig = plt.figure(figsize=(L*4,L*7))
+ax1 = fig.add_subplot(2, 1, 1)
+ax2 = fig.add_subplot(2, 1, 2)
 
 for n in ns:
     ax1.set_xscale("log")
     ax1.set_yscale("log")
-    ax1.plot(mus[n], phi_th_vals[n], linestyle="--", label=f"Theory n={n}")
-    ax1.scatter(mus[n], phi_mc_vals[n], s=14, label=f"MC n={n}")
+    ax1.plot(mus[n], phi_th_vals[n], linestyle="-", label=f"n={n}")
+    #ax1.scatter(mus[n], phi_mc_vals[n], s=14, label=f"MC n={n}")
 
 ax1.set_xlabel("Per-site mutation rate μ")
-ax1.set_ylabel("Discovery rate Φ(μ) (arb. units)")
-ax1.set_title("Shift with genome length n")
-ax1.legend(fontsize=7, loc="best")
+ax1.set_ylabel("Discovery rate Φ(μ)")
+ax1.set_title("a.")
+ax1.legend(fontsize=10, loc="best")
 
 for n in ns:
     ax2.set_xscale("log")
     ax2.set_yscale("log")
-    ax2.plot(T_grid, phi_th_vals[n], linestyle="--", label=f"Theory n={n}")
-    ax2.scatter(T_grid, phi_mc_vals[n], s=14, label=f"MC n={n}")
+    ax2.plot(T_grid, phi_th_vals[n], linestyle="-", label=f"n={n}")
+    #ax2.scatter(T_grid, phi_mc_vals[n], s=14, label=f"MC n={n}")
 
 ax2.set_xlabel("Mutation temperature T = nμ")
-ax2.set_ylabel("Discovery rate Φ (arb. units)")
-ax2.set_title("Collapse vs T")
+ax2.set_ylabel("Discovery rate Φ")
+ax2.set_title("b.")
 
 # Add Te^{-T} guide curve (scaled to match peak)
 T = T_grid
 guide = T * np.exp(-T)
 scale = np.nanmax(phi_th_vals[10**4]) / np.max(guide)
-ax2.plot(T, scale * guide, linestyle=":")
+ax2.plot(T, scale * guide, '--k',label='$Te^{-T}$' )
 
-ax2.legend(fontsize=7, loc="best")
+ax2.legend(fontsize=10, loc="best")
 fig.tight_layout()
 
-fig.savefig("temperature_scaling_sim.png", dpi=200)
-fig.savefig("temperature_scaling_sim.pdf")
+fig.savefig("temperature_scaling_sim.png", dpi=300, bbox_inches='tight',transparent=True)
+fig.savefig("../pnas/Figures/temperature_scaling_sim.pdf", bbox_inches='tight',transparent=True)
 print("Wrote temperature_scaling_sim.png and temperature_scaling_sim.pdf")

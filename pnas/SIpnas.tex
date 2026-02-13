@@ -1,0 +1,209 @@
+
+% ---- Begin SI numbering with S-prefix ----
+\setcounter{equation}{0}
+\renewcommand{\theequation}{S\arabic{equation}}
+
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+\setcounter{table}{0}
+\renewcommand{\thetable}{S\arabic{table}}
+
+% If you use theorem/lemma environments:
+\setcounter{theorem}{0}
+\renewcommand{\thetheorem}{S\arabic{theorem}}
+% ---- End SI numbering setup ----
+% If you use theorem/lemma environments:
+\setcounter{definition}{0}
+\renewcommand{\thedefinition}{S\arabic{definition}}
+% ---- End SI numbering setup ----
+
+% If you use theorem/lemma environments:
+\setcounter{lemma}{0}
+\renewcommand{\thelemma}{S\arabic{lemma}}
+% If you use theorem/lemma environments:
+\setcounter{corollary}{0}
+\renewcommand{\thecorollary}{S\arabic{corollary}}
+
+
+\section*{Supplementary Methods}
+
+
+\subsection*{Sequence Space, Mutation Geometry and Two-Part Codes}\label{sec:si:setup}
+
+Let $[q]^n$ denote the set of length-$n$ strings over an alphabet of size $q \ge 2$. For $x,y\in[q]^n$, let $d_{\Hamming}(x,y)$ denote the Hamming distance.
+For $m\in\{0,1,\dots,n\}$, define the Hamming sphere
+\cgather{
+H_m(x)=\{y\in[q]^n : d_{\Hamming}(x,y)=m\}. \label{eq:si:hammingsphere}
+}
+with cardinality $|H_m(x)|=\binom{n}{m}(q-1)^m$, where $m$ represents the number of mutated sites in one generation.
+Let $\K(\cdot)$ denote prefix-free Kolmogorov complexity with respect to a fixed universal Turing machine~\cite{LiVitanyi2019}.
+If $x\in S$ and $S$ is a finite set, then the two-part code bound is as follows:
+\cgather{
+\K(x) \le \K(S)+\log|S|+O(1),
+\qquad
+\K(x\mid S)\le \log|S|+O(1). \label{eq:si:twopart}
+}
+which expresses the optimality condition of two-part codes~\cite{LiVitanyi2019,GacsTrompVitanyi2001}: first describe the model $S$, then describe the index of $x$ within $S$.
+
+Next, we note that the mutation process induces a restricted model class. For fixed parent $x$ and mutation radius $m$, the Hamming sphere $H_m(x)$ is the set of sequences accessible by an $m$-mutation. Crucially, $\K(H_m(x)\mid x,m)=O(1)$, which implies
+$\K(H_m(x))=\K(x)+O(\log n)$,
+where the logarithmic term accounts for encoding $(n,m,q)$.
+This leads to the interpretation of \emph{mutation indexing cost} as
+\cgather{
+c(m)=\log|H_m(x)|=\log\binom{n}{m}+m\log(q-1). \label{eq:si:cm}
+}
+Thus, random mutation induces the two-part code
+\cgather{
+\K(y)\;\approx\;\K(x)+c(m), \label{eq:si:twopartmutation}
+}
+for $y$ uniformly drawn from $H_m(x)$.
+Finally, for a model $S\ni y$, the randomness deficiency~\cite{LiVitanyi2019,GacsTrompVitanyi2001} is
+\cgather{
+\Delta_y(S)=\K(S)+\log|S|-\K(y). \label{eq:si:deficiency}
+}
+Thus, admissible models are restricted to mutation-accessible sets $H_m(x)$.
+
+\begin{definition}[Net structure discovery]\label{def:si:discovery}
+Fix $\Delta\ge 1$. A mutant $y\in H_m(x)$ constitutes a \emph{net structure discovery} if
+$\Delta_y\big(H_m(x)\big)\ge\Delta$, or equivalently, $\K(y)\le \K(x)+c(m)-\Delta$.
+\end{definition}
+Net structure discovery formalizes novelty as being exceptional relative to what mutation alone would typically produce.
+
+\begin{theorem}[Universal upper bound]\label{thm:si:upper}
+For any $x\in[q]^n$, any $m$, and any $\Delta\ge 1$,
+\cgather{
+\Pr_{y\sim \mathrm{Unif}(H_m(x))}\big[\Delta_y(H_m(x))\ge\Delta\big]
+\le
+O\left(\frac{2^{-\Delta}}{|H_m(x)|}\right). \label{eq:si:upper}
+}
+\end{theorem}
+
+\begin{proof}
+If $\Delta_y(H_m(x))\ge\Delta$, then
+$\K(y)\le \K(H_m(x))+\log|H_m(x)|-\Delta$.
+By the Kraft inequality for prefix-free complexity, at most $2^{T+1}$ strings satisfy $\K(y)\le T$. Substituting
+$T=\K(H_m(x))+\log|H_m(x)|-\Delta$ and dividing by $|H_m(x)|$ yields the bound.
+\end{proof}
+
+\begin{lemma}[Typical tightness for incompressible parents]\label{lem:si:tight}
+Let $x$ satisfy $\K(x)\ge n\log q-O(1)$. Then for $y$ drawn uniformly from $H_m(x)$,
+\cgather{
+\K(y\mid x,m)=\log|H_m(x)|\pm O(1), \label{eq:si:condK}
+}
+with probability $1-O(1/|H_m(x)|)$. Consequently, up to polylogarithmic factors,
+\cgather{
+\Pr\big[\Delta_y(H_m(x))\ge\Delta\big]
+=
+\Theta\left(\frac{2^{-\Delta}}{|H_m(x)|}\right). \label{eq:si:tight}
+}
+\end{lemma}
+
+\begin{proof}
+Fix $x$ and $m$. There exists a computable bijection
+\cgather{
+\pi_{x,m}:\{1,\dots,|H_m(x)|\}\to H_m(x) \label{eq:si:bijection}
+}
+such that given $(x,m,i)$ one can compute $y=\pi_{x,m}(i)$. Hence
+\cgather{
+\K(y\mid x,m)\le \log|H_m(x)|+O(1) \label{eq:si:condKup}
+}
+for all $y\in H_m(x)$. For the lower tail, define
+\cgather{
+A_\Delta=\{y\in H_m(x):\K(y\mid x,m)\le \log|H_m(x)|-\Delta\}. \label{eq:si:Adef}
+}
+Each $y\in A_\Delta$ has a prefix-free description of length at most
+$\log|H_m(x)|-\Delta$, so $|A_\Delta|\le |H_m(x)|2^{-\Delta+O(1)}$. Thus
+\cgather{
+\Pr[y\in A_\Delta]\le 2^{-\Delta+O(1)}. \label{eq:si:Atail}
+}
+Since $x$ is incompressible, the two-part code through $H_m(x)$ is optimal up to $O(\log n)$ terms. Therefore
+\cgather{
+\Delta_y(H_m(x))
+=
+\log|H_m(x)|-\K(y\mid x,m)\pm O(\log n), \label{eq:si:deficiencyexpand}
+}
+which yields the stated asymptotic bound.
+\end{proof}
+
+\begin{corollary}[Expected discovery under binomial mutation]\label{cor:si:Phi}
+Let $X\sim \mathrm{Unif}([q]^n)$ be the parent sequence.
+Let $M\sim \mathrm{Binomial}(n,\mu)$ denote the number of mutated sites,
+and conditional on $(X,M=m)$ let $Y\sim \mathrm{Unif}(H_m(X))$. Define the expected discovery probability
+\mltlne{
+\Phi(\mu)
+:=
+\mathbb{P}\left(\Delta_Y(H_M(X)) \ge \Delta \right)
+\\=
+\sum_{m=1}^n
+\Pr(M=m)\,
+\Pr_{y\sim H_m(X)} \left[\Delta_y(H_m(X)) \ge \Delta \right]. \label{eq:si:PhiDef}
+}
+Then, for $\Delta=o(\log n)$,
+\cgather{
+\Phi(\mu)\asymp
+2^{-\Delta}
+\sum_{m=1}^n
+\Pr(M=m)
+\frac{1}{|H_m(X)|}. \label{eq:si:PhiAsymp}
+}
+\end{corollary}
+
+\begin{proof}
+For $X\sim \mathrm{Unif}([q]^n)$, the standard incompressibility bound
+\cgather{
+\Pr\left[K(X)\le n\log q - t\right]\le q^{-t} \label{eq:si:incomp}
+}
+implies that $X$ satisfies the incompressibility condition of Lemma~\ref{lem:si:tight}
+with overwhelming probability. On this event, Lemma~\ref{lem:si:tight} yields
+\cgather{
+\Pr_{y\sim H_m(X)}
+\left[\Delta_y(H_m(X)) \ge \Delta \right]
+\asymp
+\frac{2^{-\Delta}}{|H_m(X)|}. \label{eq:si:probm}
+}
+The contribution of the exceptional set $\{X: K(X)\le n\log q - t\}$ is at most $q^{-t}$ and is negligible
+for $t=\omega(1)$. Substituting the tight bound into the definition of $\Phi(\mu)$ gives the stated expression.
+\end{proof}
+
+Note that upon substituting the binomial mutation model and the sphere cardinality
+$|H_m(X)|=\binom{n}{m}(q-1)^m$, the combinatorial factor $\binom{n}{m}$ appearing in $\Pr(M=m)$ cancels
+with the identical factor in $|H_m(X)|$. Thus the multiplicity of mutation-location choices does not amplify
+discovery probability: it is already accounted for by the mutation process itself. What remains is the symbol-choice
+entropy $(q-1)^m$ and the exponential suppression arising from the rarity of exceptional strings within each
+mutation-accessible model. We can therefore state the small-$\mu$ asymptotics of the discovery rate as follows.
+
+\begin{lemma}[Small-$\mu$ asymptotics of discovery rate]\label{lem:si:smallmu}
+For $\mu=o(1)$,
+\cgather{
+\sum_{m=1}^n\left(\frac{\mu}{q-1}\right)^m
+=
+\frac{\mu}{q-1}+O(\mu^2),
+\qquad
+(1-\mu)^n=e^{-n\mu+O(n\mu^2)}. \label{eq:si:smallmu}
+}
+Consequently,
+\cgather{
+\Phi(\mu)\asymp
+C\,2^{-\Delta}\,\frac{\mu}{q-1}\,e^{-n\mu+O(n\mu^2)}, \label{eq:si:PhiSmallmu}
+}
+where $C$ absorbs polylogarithmic factors.
+\end{lemma}
+
+\begin{proof}
+The first expansion is the truncated geometric series. Substituting
+$n\log(1-\mu)=-n\mu+O(n\mu^2)$ into the expression for $\Phi(\mu)$ gives the claim.
+\end{proof}
+
+\begin{theorem}[Optimal mutation rate]\label{thm:si:opt}
+In the regime $\mu=o(1)$ with $n\mu^2=o(1)$, the leading term $\mu e^{-n\mu}$ is maximized at $n\mu=1$.
+Consequently,
+\cgather{
+\mu^\star=\frac{1+o(1)}{n}. \label{eq:si:muopt}
+}
+\end{theorem}
+
+\begin{corollary}[Drake’s rule]\label{cor:si:drake}
+Optimizing information-theoretic structure discovery under random mutation yields an inverse scaling of per-site
+mutation rate with genome length.
+\end{corollary}
