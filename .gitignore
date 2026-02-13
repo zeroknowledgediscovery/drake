@@ -1,0 +1,98 @@
+*~
+**/*~
+
+# ======================
+# LaTeX core build files
+# ======================
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.nav
+*.snm
+*.vrb
+*.xdv
+*.dvi
+*.ps
+
+# ======================
+# BibTeX / Biber
+# ======================
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# ======================
+# Index / glossary
+# ======================
+*.idx
+*.ilg
+*.ind
+*.glg
+*.glo
+*.gls
+*.ist
+*.xdy
+*.acn
+*.acr
+*.alg
+
+# ======================
+# latexmk
+# ======================
+.latexmkrc
+*.latexmain
+
+# ======================
+# Minted / pygments
+# ======================
+_minted*
+*.pyg
+
+# ======================
+# TikZ / pgfplots
+# ======================
+*.pgf
+*.pgfsys
+*.pgfsys-*
+*.tikz
+*.auxlock
+
+# ======================
+# Beamer
+# ======================
+*.nav
+*.snm
+
+# ======================
+# Split / standalone outputs
+# ======================
+*-converted-to.*
+*.spl
+*.tmp
+
+# ======================
+
+# ======================
+# Editor / OS noise
+# ======================
+*~
+.#*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ======================
+# LaTeX build directories
+# ======================
+build/
+out/
+latex.out/
