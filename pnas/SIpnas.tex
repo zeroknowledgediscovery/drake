@@ -207,3 +207,545 @@ Consequently,
 Optimizing information-theoretic structure discovery under random mutation yields an inverse scaling of per-site
 mutation rate with genome length.
 \end{corollary}
+
+
+
+% --- Drake's rule: 3D-ish Hamming sphere (wireframe) + selected variants ---
+% Requires: \usepackage{tikz}
+% Optional (recommended): \usetikzlibrary{calc}
+
+%% \begin{figure}[t]
+%% \centering
+%% \begin{tikzpicture}[scale=1]
+%% \def\SCALE{.8}
+%% % =======================
+%% % (A) Full Hamming sphere
+%% % =======================
+%% \node[scale=\SCALE] (A) at (0,0) {
+%% \begin{tikzpicture}[ line cap=round, line join=round]
+
+%% \def\R{2.35}        % "sphere" radius (projected)
+%% \def\ry{0.58}       % vertical squash to suggest depth
+%% \def\tilt{18}       % degrees: slight tilt effect via shifted longitudes
+
+%% % Outer silhouette
+%% \draw[thick] (0,0) circle (\R);
+
+%% % Latitude rings (ellipses)
+%% \foreach \s/\op in {1.00/0.55,0.86/0.35,0.72/0.25}{
+%%   \draw[thin, opacity=\op] (0,0) ellipse ({\R*\s} and {\R*\ry*\s});
+%% }
+
+%% % Longitude rings (rotate ellipse by multiple angles)
+%% \foreach \a/\op in {0/0.40,35/0.28,70/0.22,105/0.18,140/0.14}{
+%%   \begin{scope}[rotate=\a]
+%%     \draw[thin, opacity=\op] (0,0) ellipse ({\R} and {\R*\ry});
+%%   \end{scope}
+%% }
+
+%% % Center genome
+%% \fill (0,0) circle (2.2pt);
+%% \node[font=\sffamily\small, anchor=west] at (0.12,0.05) {$x$};
+%% \node[font=\sffamily\small] at (0,-0.38) {\strut parent genome};
+
+%% % Label
+%% \node[font=\sffamily\small] at (0,\R+0.35) {\strut Hamming sphere $H_m(x)$};
+
+%% % A few faint points on surface
+%% \foreach \ang in {18,62,118,165,210,268,322}{
+%%   \fill[opacity=0.28] ({\R*cos(\ang)},{\R*sin(\ang)}) circle (1.5pt);
+%% }
+
+%% \end{tikzpicture}};
+
+%% % ======================================
+%% % (B) Sphere faint + selected variants
+%% % ======================================
+%% \node[anchor=west,scale=\SCALE] (B) at ([xshift=.5in]A.east) {
+%% \begin{tikzpicture}[line cap=round, line join=round]
+
+%% \def\R{2.35}
+%% \def\ry{0.58}
+
+%% % Faint outer silhouette
+%% \draw[thick, opacity=0.18] (0,0) circle (\R);
+
+%% % Faint latitudes
+%% \foreach \s/\op in {1.00/0.14,0.86/0.10,0.72/0.08}{
+%%   \draw[thin, opacity=\op] (0,0) ellipse ({\R*\s} and {\R*\ry*\s});
+%% }
+
+%% % Faint longitudes
+%% \foreach \a/\op in {0/0.12,35/0.09,70/0.07,105/0.06,140/0.05}{
+%%   \begin{scope}[rotate=\a]
+%%     \draw[thin, opacity=\op] (0,0) ellipse ({\R} and {\R*\ry});
+%%   \end{scope}
+%% }
+
+%% % Center genome (de-emphasized)
+%% \fill[opacity=0.35] (0,0) circle (2.0pt);
+%% \node[font=\sffamily\small, anchor=west, opacity=0.6] at (0.12,0.05) {$x$};
+
+%% % Highlighted selected variants (on the surface)
+%% \foreach \ang/\lab in {25/$y_1$,92/$y_2$,150/$y_3$,230/$y_4$,310/$y_5$}{
+%%   \fill ({\R*cos(\ang)},{\R*sin(\ang)}) circle (2.2pt);
+%%   \draw[thick] ({\R*cos(\ang)},{\R*sin(\ang)}) circle (3.7pt);
+%%   \node[font=\sffamily\small, anchor=west] at
+%%     ({\R*cos(\ang)+0.12},{\R*sin(\ang)+0.06}) {\lab};
+%% }
+
+%% % Label
+%% \node[font=\sffamily\small] at (-1.5,-0.38) {\strut selected variants on $H_m(x)$};
+
+%% \end{tikzpicture}};
+
+%% \draw[->, >=stealth, thick, dashed] (A) -- (B);
+%% \end{tikzpicture}
+
+%% \caption{Wireframe depiction of the mutation-accessible neighborhood at fixed Hamming radius $m$. Left: the full sphere $H_m(x)$ around parent genome $x$ (wireframe to emphasize geometry). Right: the same sphere is de-emphasized and a small subset of outcomes on the sphere are highlighted as variants amplified by selection.}
+%% \end{figure}
+
+
+
+% 3D-like Hamming sphere, parameterized to fit a fixed total width (e.g., 3.0in).
+% Key idea: draw each sphere in normalized coordinates (radius = 1), then set x,y units
+% to the desired physical radius in the outer panel. No nested tikzpictures.
+
+% Requires: \usepackage{tikz}
+% Optional: \usetikzlibrary{calc}
+
+%% \begin{figure}[t]
+%% \centering
+%% \begin{tikzpicture}[line cap=round, line join=round]
+
+%% % -------------------------
+%% % User knobs
+%% % -------------------------
+%% \def\TotalW{3.00in}   % total width of the whole panel (single column)
+%% \def\GapW{0.18in}     % gap between left and right spheres
+%% \def\ry{0.58}         % vertical squash for wireframe lat/long ellipses
+
+%% % -------------------------
+%% % Derived geometry (no touch)
+%% % -------------------------
+%% \pgfmathsetlengthmacro{\PanelW}{0.5*(\TotalW-\GapW)} % width allotted to each sphere panel
+%% \pgfmathsetlengthmacro{\Rad}{0.5*\PanelW}            % physical radius for each sphere (in TeX length)
+%% \pgfmathsetlengthmacro{\CxA}{\Rad}                   % center x of left sphere
+%% \pgfmathsetlengthmacro{\CxB}{\PanelW+\GapW+\Rad}     % center x of right sphere
+%% \pgfmathsetlengthmacro{\Cy}{0pt}                     % common center y
+
+%% % Common wireframe sets in normalized (radius=1) coordinates
+%% \def\LatSet{1.00/0.55,0.86/0.35,0.72/0.25}
+%% \def\LonSet{0/0.40,35/0.28,70/0.22,105/0.18,140/0.14}
+
+%% % =======================
+%% % (A) Full Hamming sphere
+%% % =======================
+%% \begin{scope}[shift={(\CxA,\Cy)}, x=\Rad, y=\Rad]
+
+%%   % Outer silhouette (unit circle)
+%%   \draw[thick] (0,0) circle (1);
+
+%%   % Latitudes
+%%   \foreach \s/\op in \LatSet{
+%%     \draw[thin, opacity=\op] (0,0) ellipse ({\s} and {\ry*\s});
+%%   }
+
+%%   % Longitudes
+%%   \foreach \a/\op in \LonSet{
+%%     \begin{scope}[rotate=\a]
+%%       \draw[thin, opacity=\op] (0,0) ellipse (1 and \ry);
+%%     \end{scope}
+%%   }
+
+%%   % Center genome
+%%   \fill (0,0) circle (1.8pt);
+%%   \node[font=\sffamily\small, anchor=west] at (0.06,0.03) {$x$};
+%%   \node[font=\sffamily\footnotesize] at (0,-0.20) {\strut parent genome};
+
+%%   % Label above sphere
+%%   \node[font=\sffamily\small,align=center] at (0,1.4) {\strut Hamming sphere \\ $H_m(x)$};
+
+%%   % A few faint surface points (on the outer silhouette)
+%%   \foreach \ang in {18,62,118,165,210,268,322}{
+%%     \fill[opacity=0.28] ({cos(\ang)},{sin(\ang)}) circle (1.4pt);
+%%   }
+
+%% \end{scope}
+
+%% % ======================================
+%% % (B) Sphere faint + selected variants
+%% % ======================================
+%% \begin{scope}[shift={(\CxB,\Cy)}, x=\Rad, y=\Rad]
+
+%%   % Faint outer silhouette
+%%   \draw[thick, opacity=0.1] (0,0) circle (1);
+
+%%   % Faint latitudes
+%%   \foreach \s/\op in {1.00/0.14,0.86/0.12,0.72/0.1}{
+%%     \draw[thin, opacity=\op] (0,0) ellipse ({\s} and {\ry*\s});
+%%   }
+
+%%   % Faint longitudes
+%%   \foreach \a/\op in {0/0.11,35/0.15,70/0.14,105/0.14,140/0.12}{
+%%     \begin{scope}[rotate=\a]
+%%       \draw[thin, opacity=\op] (0,0) ellipse (1 and \ry);
+%%     \end{scope}
+%%   }
+
+%%   % Center genome, de-emphasized
+%%   \fill[opacity=0.35] (0,0) circle (1.6pt);
+%%   \node[font=\sffamily\small, anchor=west, opacity=0.6] at (0.06,0.03) {$x$};
+
+%%   % Highlighted selected variants on the sphere
+%%   \foreach \ang/\lab in {25/$y_1$,92/$y_2$,150/$y_3$,230/$y_4$,310/$y_5$}{
+%%     \fill ({cos(\ang)},{sin(\ang)}) circle (1.9pt);
+%%     \draw[thick] ({cos(\ang)},{sin(\ang)}) circle (3.2pt);
+%%     \node[font=\sffamily\small, anchor=west] at ({cos(\ang)+0.07},{sin(\ang)+0.03}) {\lab};
+%%   }
+
+%%   \node[font=\sffamily\small,align=center] at (0,1.4) {\strut selected variants \\ on $H_m(x)$};
+%%   %\node[font=\sffamily\small] at (0,1.18) {\strut Hamming sphere $H_m(x)$};
+
+%% \end{scope}
+
+%% % Dashed arrow between panels (in absolute TeX lengths)
+%% %% \draw[->, >=stealth, thick, dashed]
+%% %%   ([xshift=-30pt]\CxA+\Rad,\Cy) -- ([xshift=40pt]\CxB-\Rad,\Cy);
+%% \end{tikzpicture}
+
+%% \caption{Wireframe depiction of the mutation-accessible neighborhood at fixed Hamming radius $m$. Left: the full neighborhood $H_m(x)$ around parent genome $x$. Right: the same sphere is de-emphasized and a small subset of outcomes on the sphere are highlighted as variants amplified by selection.}
+%% \end{figure}
+
+
+
+%% \begin{figure}[t]
+%% \centering
+%% \begin{tikzpicture}[line cap=round, line join=round]
+
+%% % -------------------------
+%% % User knobs
+%% % -------------------------
+%% \def\TotalW{3.00in}   % total width of the whole panel (single column)
+%% \def\GapW{0.18in}     % gap between left and right spheres
+%% \def\ry{0.58}         % vertical squash for wireframe lat/long ellipses
+
+%% % -------------------------
+%% % Derived geometry (no touch)
+%% % -------------------------
+%% \pgfmathsetlengthmacro{\PanelW}{0.5*(\TotalW-\GapW)}
+%% \pgfmathsetlengthmacro{\Rad}{0.5*\PanelW}
+%% \pgfmathsetlengthmacro{\CxA}{\Rad}
+%% \pgfmathsetlengthmacro{\CxB}{\PanelW+\GapW+\Rad}
+%% \pgfmathsetlengthmacro{\Cy}{0pt}
+
+%% % Common wireframe sets in normalized (radius=1) coordinates
+%% \def\LatSet{1.00/0.55,0.86/0.35,0.72/0.25}
+%% \def\LonSet{0/0.40,35/0.28,70/0.22,105/0.18,140/0.14}
+
+%% % ==================================
+%% % (A) Full Hamming sphere (wireframe)
+%% % Suggested changes:
+%% %  - radial arrow labeled m
+%% %  - caption/labels emphasize "projection of a discrete shell"
+%% % ==================================
+%% \begin{scope}[shift={(\CxA,\Cy)}, x=\Rad, y=\Rad]
+
+%%   % Outer silhouette (unit circle)
+%%   \draw[thick] (0,0) circle (1);
+
+%%   % Latitudes
+%%   \foreach \s/\op in \LatSet{
+%%     \draw[thin, opacity=\op] (0,0) ellipse ({\s} and {\ry*\s});
+%%   }
+
+%%   % Longitudes
+%%   \foreach \a/\op in \LonSet{
+%%     \begin{scope}[rotate=\a]
+%%       \draw[thin, opacity=\op] (0,0) ellipse (1 and \ry);
+%%     \end{scope}
+%%   }
+
+%%   % Center genome
+%%   \fill (0,0) circle (1.8pt);
+%%   \node[font=\sffamily\small, anchor=west] at (0.06,0.03) {$x$};
+%%   \node[font=\sffamily\footnotesize] at (0,-0.20) {\strut parent genome};
+
+%%   % Radial arrow indicating Hamming radius m
+%%   \draw[->, >=stealth, thick] (0,0) -- ({cos(35)},{sin(35)})
+%%     node[pos=0.62, font=\sffamily\small, fill=white, inner sep=1pt] {$m$};
+
+%%   % Label above sphere (make "projection" explicit)
+%%   \node[font=\sffamily\small,align=center] at (0,1.42)
+%%     {\strut projection of the \\ Hamming shell $H_m(x)$};
+
+%%   % Faint surface points (background outcomes)
+%%   \foreach \ang in {18,62,118,165,210,268,322}{
+%%     \fill[opacity=0.25] ({cos(\ang)},{sin(\ang)}) circle (1.4pt);
+%%   }
+
+%% \end{scope}
+
+%% % ======================================
+%% % (B) Sphere faint + selected variants
+%% % Suggested changes:
+%% %  - selected points are clustered (non-uniform) to avoid "uniform random"
+%% %  - optional faint "selected cap" patch to indicate structure
+%% %  - keep sphere de-emphasized
+%% % ======================================
+%% \begin{scope}[shift={(\CxB,\Cy)}, x=\Rad, y=\Rad]
+
+%%   % Faint outer silhouette
+%%   \draw[thick, opacity=0.10] (0,0) circle (1);
+
+%%   % Faint latitudes
+%%   \foreach \s/\op in {1.00/0.10,0.86/0.09,0.72/0.08}{
+%%     \draw[thin, opacity=\op] (0,0) ellipse ({\s} and {\ry*\s});
+%%   }
+
+%%   % Faint longitudes
+%%   \foreach \a/\op in {0/0.09,35/0.08,70/0.07,105/0.06,140/0.05}{
+%%     \begin{scope}[rotate=\a]
+%%       \draw[thin, opacity=\op] (0,0) ellipse (1 and \ry);
+%%     \end{scope}
+%%   }
+
+%%   % Center genome, de-emphasized
+%%   \fill[opacity=0.25] (0,0) circle (1.6pt);
+%%   \node[font=\sffamily\small, anchor=west, opacity=0.5] at (0.06,0.03) {$x$};
+
+%%   % Optional: faint "cap" patch where selected variants tend to lie
+%%   % (drawn as a short arc on the outer silhouette)
+%%   \draw[very thick, opacity=0.20] ( {cos(18)}, {sin(18)} )
+%%     arc[start angle=18, end angle=70, radius=1];
+
+%%   % Highlighted selected variants (clustered on a patch of the shell)
+%%   % (angles concentrated to indicate structured selection)
+%%   \foreach \ang/\lab in {14/$y_1$,32/$y_2$,41/$y_3$,52/$y_4$,63/$y_5$}{
+%%     \fill ({cos(\ang)},{sin(\ang)}) circle (1.9pt);
+%%     \draw[thick] ({cos(\ang)},{sin(\ang)}) circle (3.2pt);
+%%     \node[font=\sffamily\small, anchor=west] at ({cos(\ang)+0.07},{sin(\ang)+0.03}) {\lab};
+%%   }
+
+%%   \node[font=\sffamily\small,align=center] at (0,1.42)
+%%     {\strut selection retains a \\ sparse subset on $H_m(x)$};
+
+%% \end{scope}
+
+%% \end{tikzpicture}
+
+%% \caption{Low-dimensional schematic of the mutation-accessible neighborhood at fixed Hamming radius $m$. Left: the discrete shell $H_m(x)$ around parent genome $x$, shown as a wireframe sphere for geometric intuition. Right: the shell is de-emphasized and only a small, structured subset of outcomes on $H_m(x)$ are highlighted as variants amplified by selection.}
+%% \end{figure}
+
+
+%% % Three-stage minimalist schematic:
+%% %   (1) single parent dot x
+%% %   (2) expansion: disk uniformly filled with faint dots
+%% %   (3) selection: same disk faded, with 2-3 highlighted dots (colored)
+%% %
+%% % Requires: \usepackage{tikz}
+%% % Optional: \usetikzlibrary{calc,arrows.meta}
+
+%% \begin{figure}[t]
+%% \centering
+%% \begin{tikzpicture}[line cap=round, line join=round, >=stealth]
+
+%% % -------------------------
+%% % User knobs
+%% % -------------------------
+%% \def\TotalW{3.00in}     % overall width target
+%% \def\R{0.42in}          % disk radius
+%% \def\Gap{0.18in}        % gap between stages
+%% \def\N{85}              % number of background dots in disk
+
+%% % Stage x positions
+%% \pgfmathsetlengthmacro{\xA}{0.10in}
+%% \pgfmathsetlengthmacro{\xB}{\xA + 0.55in + \Gap}
+%% \pgfmathsetlengthmacro{\xC}{\xB + 2*\R + 0.55in + \Gap}
+%% \pgfmathsetlengthmacro{\yC}{0in}
+
+%% % -------------------------
+%% % (1) Parent x
+%% % -------------------------
+%% \fill (\xA,\yC) circle (2.2pt);
+%% \node[font=\sffamily\small, anchor=west] at (\xA+0.08in,\yC+0.01in) {$x$};
+
+%% \draw[->, thick] (\xA+0.32in,\yC) -- (\xB-\R-0.10in,\yC)
+%%   node[midway, font=\sffamily\footnotesize, yshift=8pt] {mutation};
+
+%% % -------------------------
+%% % Helper: deterministic "uniform-ish" fill in a disk (no RNG)
+%% % -------------------------
+%% % We place points using a sunflower (Fermat spiral) pattern:
+%% % r_k = R * sqrt(k/N), theta_k = k * golden_angle
+%% \pgfmathsetmacro{\gold}{137.50776405} % degrees
+
+%% % -------------------------
+%% % (2) Expansion disk
+%% % -------------------------
+%% \begin{scope}[shift={(\xB,\yC)}]
+
+%%   % boundary (optional; keep light)
+%%   \draw[thin, opacity=0.30] (0,0) circle (\R);
+
+%%   % filled dots
+%%   \foreach \k in {1,...,\N}{
+%%     \pgfmathsetmacro{\t}{\k*\gold}
+%%     \pgfmathsetmacro{\rr}{sqrt(\k/\N)}
+%%     \fill[opacity=0.28] ({\rr*\R*cos(\t)},{\rr*\R*sin(\t)}) circle (1.15pt);
+%%   }
+
+%% \end{scope}
+
+%% \draw[->, thick] (\xB+\R+0.10in,\yC) -- (\xC-\R-0.10in,\yC)
+%%   node[midway, font=\sffamily\footnotesize, yshift=8pt] {selection};
+
+%% % -------------------------
+%% % (3) Selection disk: same, faded + a few highlighted points
+%% % -------------------------
+%% \begin{scope}[shift={(\xC,\yC)}]
+
+%%   % boundary (faded)
+%%   \draw[thin, opacity=0.12] (0,0) circle (\R);
+
+%%   % same filled dots, but more faded
+%%   \foreach \k in {1,...,\N}{
+%%     \pgfmathsetmacro{\t}{\k*\gold}
+%%     \pgfmathsetmacro{\rr}{sqrt(\k/\N)}
+%%     \fill[opacity=0.08] ({\rr*\R*cos(\t)},{\rr*\R*sin(\t)}) circle (1.15pt);
+%%   }
+
+%%   % highlighted retained variants (same size, different color)
+%%   % pick a few indices so they lie inside the disk
+%%   \foreach \k/\lab in {12/$y_1$,37/$y_2$,71/$y_3$}{
+%%     \pgfmathsetmacro{\t}{\k*\gold}
+%%     \pgfmathsetmacro{\rr}{sqrt(\k/\N)}
+%%     \fill[red] ({\rr*\R*cos(\t)},{\rr*\R*sin(\t)}) circle (1.15pt);
+%%     % optional tiny labels (comment out if you want ultra-minimal)
+%%     %\node[font=\sffamily\footnotesize, anchor=west] at
+%%     %  ({\rr*\R*cos(\t)+0.06in},{\rr*\R*sin(\t)+0.02in}) {\lab};
+%%   }
+
+%% \end{scope}
+
+%% \end{tikzpicture}
+
+%% \caption{Two-step schematic: mutation expands a parent genome $x$ into many variants (uniform fill), and selection retains only a sparse subset (highlighted) from the same candidate set.}
+%% \end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+%% % Three-stage schematic:
+%% %   (1) single parent x
+%% %   (2) expansion: disk uniformly filled with dots (including central x)
+%% %   (3) selection: same disk faded, few highlighted dots, central x retained
+%% %
+%% % Requires: \usepackage{tikz}
+%% % Optional: \usetikzlibrary{calc,arrows.meta}
+
+%% \begin{figure}[t]
+%% \centering
+%% \begin{tikzpicture}[line cap=round, line join=round, >=stealth]
+
+%% % -------------------------
+%% % User knobs
+%% % -------------------------
+%% \def\TotalW{3.00in}
+%% \def\R{0.42in}          % disk radius
+%% \def\Gap{0.18in}
+%% \def\N{85}              % background dots
+
+%% % Stage x positions
+%% \pgfmathsetlengthmacro{\xA}{0.10in}
+%% \pgfmathsetlengthmacro{\xB}{\xA + 0.55in + \Gap}
+%% \pgfmathsetlengthmacro{\xC}{\xB + 2*\R + 0.55in + \Gap}
+%% \pgfmathsetlengthmacro{\yC}{0in}
+
+%% % Sunflower angle (deterministic fill)
+%% \pgfmathsetmacro{\gold}{137.50776405}
+
+%% % -------------------------
+%% % (1) Parent x
+%% % -------------------------
+%% \fill (\xA,\yC) circle (2.2pt);
+%% \node[font=\sffamily\small, anchor=west] at (\xA,\yC-0.1in) {$x$};
+
+%% \draw[->, thick] (\xA+0.02in,\yC) -- (\xB-\R-0.0in,\yC)
+%%   node[midway, above, font=\sffamily\footnotesize, yshift=2pt, xshift=-6pt] {mutation};
+
+%% % -------------------------
+%% % (2) Expansion disk
+%% % -------------------------
+%% \begin{scope}[shift={(\xB,\yC)}]
+
+%%   % boundary (light)
+%%   \draw[thin, opacity=0.30] (0,0) circle (\R);
+
+%%   % central parent x still present
+%%   \fill (0,0) circle (2.0pt);
+%%   \node[font=\sffamily\footnotesize, anchor=west] at (0.06in,0.01in) {$x$};
+
+%%   % filled dots (mutation outcomes)
+%%   \foreach \k in {1,...,\N}{
+%%     \pgfmathsetmacro{\t}{\k*\gold}
+%%     \pgfmathsetmacro{\rr}{sqrt(\k/\N)}
+%%     \fill[opacity=0.28]
+%%       ({\rr*\R*cos(\t)},{\rr*\R*sin(\t)}) circle (1.1pt);
+%%   }
+
+%% \end{scope}
+
+%% \draw[->, thick] (\xB+\R+0.10in,\yC) -- (\xC-\R-0.10in,\yC)
+%%   node[midway, font=\sffamily\footnotesize, yshift=8pt] {selection};
+
+%% % -------------------------
+%% % (3) Selection disk
+%% % -------------------------
+%% \begin{scope}[shift={(\xC,\yC)}]
+
+%%   % boundary (faded)
+%%   \draw[thin, opacity=0.12] (0,0) circle (\R);
+
+%%   % central x retained (same size, black)
+%%   \fill (0,0) circle (2.0pt);
+%%   \node[font=\sffamily\footnotesize, anchor=west] at (0.06in,0.01in) {$x$};
+
+%%   % background candidates (faded)
+%%   \foreach \k in {1,...,\N}{
+%%     \pgfmathsetmacro{\t}{\k*\gold}
+%%     \pgfmathsetmacro{\rr}{sqrt(\k/\N)}
+%%     \fill[opacity=0.08]
+%%       ({\rr*\R*cos(\t)},{\rr*\R*sin(\t)}) circle (1.1pt);
+%%   }
+
+%%   % highlighted retained variants (same size, different color)
+%%   \foreach \k/\lab in {12/$y_1$,37/$y_2$,71/$y_3$}{
+%%     \pgfmathsetmacro{\t}{\k*\gold}
+%%     \pgfmathsetmacro{\rr}{sqrt(\k/\N)}
+%%     \fill[red]
+%%       ({\rr*\R*cos(\t)},{\rr*\R*sin(\t)}) circle (1.1pt);
+%%   }
+
+%% \end{scope}
+
+%% % -------------------------
+%% % Operator equation
+%% % -------------------------
+%% \node[font=\sffamily\footnotesize]
+%%   at (0.5*\TotalW,-0.65in)
+%%   {$x \xrightarrow{\ \mathrm{mutation}\ } H_m(x)
+%%     \xrightarrow{\ \mathrm{selection}\ } \{x, y_1,\dots,y_k\}$};
+
+%% \end{tikzpicture}
+
+%% \caption{Two-step evolutionary process: mutation expands a parent genome $x$ into many nearby variants (uniform fill), and selection retains only a sparse subset while the parent lineage persists.}
+%% \end{figure}
