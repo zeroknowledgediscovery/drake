@@ -11,7 +11,7 @@
 %\usepackage{shellesc}
 %\ShellEscape{pdflatex si}
 \usetikzlibrary{shapes,calc,shadows,fadings,arrows,decorations.pathreplacing,automata,positioning}
-\usepackage{hyperref}
+%\usepackage{hyperref}
 \usetikzlibrary{external}
 \tikzexternalize[prefix=./Figures/External/]% activate
 \tikzexternaldisable 
@@ -155,7 +155,7 @@ Across organisms and viruses, the per-site mutation rate scales inversely with g
 \thispagestyle{firststyle}
 \ifthenelse{\boolean{shortarticle}}{\ifthenelse{\boolean{singlecolumn}}{\abscontentformatted}{\abscontent}}{}
 
-\firstpage[7]{4} 
+\firstpage[6]{4} 
 % Use \firstpage to indicate which paragraph and line will start the second page and subsequent formatting. In this example, there are a total of 11 paragraphs on the first page, counting the first level heading as a paragraph. The value {12} represents the number of the paragraph starting the second page. If a paragraph runs over onto the second page, include a bracket with the paragraph line number starting the second page, followed by the paragraph number in curly brackets, e.g. "\firstpage[4]{11}".
 
 
@@ -169,19 +169,41 @@ Standard explanations of Drake’s rule fall into two broad categories. One emph
 Here we pursue a complementary route that is upstream of selection and does not invoke biochemical detail, explicit fitness landscapes, or equilibrium population genetics. We ask: given a blind local mutation mechanism, at what mutation load is the \emph{supply rate} of statistically exceptional variants maximized? The point is not that evolution seeks exceptionality per se, but that selection can only act on what mutation supplies, namely for a parent genome $x$:
 \cgather{x \xrightarrow{\ \textrm{mutation}\ } \textrm{Large set of random mutants}
     \xrightarrow{\ \textrm{selection}\ } \{y_1,\dots,y_k\}}
-If mutation predominantly produces outcomes that are typical under its own kernel, then repeated mutation pushes lineages toward the kernel's typical set, and accumulated organization is continually eroded into mutational background; we descend into noise devoid of structure making life impossible. Any sustained adaptive process therefore requires a nonzero supply of outcomes that are atypical relative to mutation alone, since these are the only candidates that can be preferentially retained rather than washed out.
+If mutation predominantly produces outcomes that are typical under its own kernel, then repeated mutation pushes lineages toward the kernel's typical set, and accumulated organization is continually eroded into mutational background; we descend into noise (See Fig.\ref{figsim}b). Any sustained adaptive process therefore requires a nonzero supply of outcomes that are atypical relative to mutation alone, since these are the only candidates that can be preferentially retained rather than washed out. Thus, we are not proposing any explicit evolutionary objective function; we are analyzing  structural constraints on variation supply induced by local blind search.
 
 Our starting observation is that mutation induces a natural statistical model for an offspring relative to its parent. For a parent genome $x\in[q]^n$, an $m$-mutation restricts the offspring $y$ to the Hamming sphere $H_m(x)$, the set of sequences at Hamming distance $m$ from $x$. Under the mutation-induced model that is uniform over $H_m(x)$, a typical draw requires $\log|H_m(x)|$ bits to specify once the radius is fixed, and
 $|H_m(x)|=\binom{n}{m}(q-1)^m$ grows rapidly with $m$. This immediately implies a notion of typicality: at a given radius, most outcomes resemble typical draws from the mutation kernel, and only a small fraction are exceptional relative to that kernel. In particular, the larger the neighborhood, the thinner the tail of mutation-atypical outcomes within it.
 
 
-We formalize this atypicality or exceptionality relative to the mutation-induced model on $H_m(x)$ using randomness deficiency (Defn.~\ref{def:si:discovery}), which measures how much rarer an outcome is than a typical draw from the same model. Rarity here is not a proxy for fitness; rather, being rare relative to the mutation kernel is what makes an outcome statistically distinguishable from mutational background and therefore \emph{available}, in principle, for selective amplification. A mutant is called a \emph{net structure discovery} if its deficiency exceeds a margin $\Delta$ (Def.~\ref{def:si:discovery}). A two-part coding/counting argument (Thm.~\ref{thm:si:upper}, Lem.~\ref{lem:si:tight}) implies that, for typical parents, the fraction of $\Delta$-exceptional outcomes at radius $m$ scales as $2^{-\Delta}/|H_m(x)|$ up to polylogarithmic factors; this ``typical'' qualifier is in a counting/combinatorial sense (formalized in the SI Appendix) and is not an empirical claim that biological genomes are algorithmically random. We then combine this typical-case rarity with an independent per-site mutation model $M\sim\mathrm{Binomial}(n,\mu)$ to define an expected discovery rate $\Phi(\mu)$ that averages the $\Delta$-exceptional probability over mutation radii (\eqref{eq:si:PhiDef}). Optimizing $\Phi(\mu)$ yields an interior optimum at per-genome mutation intensity $T=n\mu=O(1)$ (Theorem~\ref{thm:si:opt}), and in particular,
+We formalize this atypicality or exceptionality relative to the mutation-induced model on $H_m(x)$ using randomness deficiency (Defn.~\ref{def:si:discovery}), which measures how much rarer an outcome is than a typical draw from the same model. Rarity here is not a proxy for fitness; rather, being rare relative to the mutation kernel is what makes an outcome statistically distinguishable from mutational background and therefore \emph{available}, in principle, for selective amplification. A mutant is called a \emph{net structure discovery} if its deficiency exceeds a margin $\Delta$ (Def.~\ref{def:si:discovery}). A two-part coding/counting argument (Thm.~\ref{thm:si:upper}, Lem.~\ref{lem:si:tight}) implies that, for typical parents, the fraction of $\Delta$-exceptional outcomes at radius $m$ scales as $2^{-\Delta}/|H_m(x)|$ up to polylogarithmic factors; this ``typical'' qualifier is in a counting/combinatorial sense (formalized in the SI Appendix) and is not an empirical claim that biological genomes are algorithmically random. (However, real genomes often lie close to the maximal entropy rate for a four-letter alphabet, consistent with the combinatorial typicality regime, see Fig.\ref{figsim}a.) We then combine this typical-case rarity with an independent per-site mutation model $M\sim\mathrm{Binomial}(n,\mu)$ to define an expected discovery rate $\Phi(\mu)$ that averages the $\Delta$-exceptional probability over mutation radii (\eqref{eq:si:PhiDef}). Optimizing $\Phi(\mu)$ yields an interior optimum at per-genome mutation intensity $T=n\mu=O(1)$ (Theorem~\ref{thm:si:opt}), and in particular,
 \[
 \mu^\star=\frac{1+o(1)}{n}.
 \]
 Thus Drake’s rule emerges as a mechanism-independent supply optimum under blind local perturbation, complementing fidelity- and stability-based perspectives such as the error-threshold viewpoint.
+%Importantly, we do not assume a Poisson mutation process a priori. The simulation uses the exact Binomial model arising from independent per-site substitutions. The exponential factor appearing below is the standard small-$\mu$ approximation $(1-\mu)^n \approx e^{-n\mu}$ obtained when $T=n\mu$ is held fixed and $n\mu^2 \to 0$.
 
 
+\begin{figure}[!ht]
+\includegraphics[width=.5\textwidth]{Figures/External/plotfig}
+
+\vspace{-5pt}
+
+%% \caption{
+%% \textbf{Scaling and collapse of the discovery rate under independent per-site mutation.}
+%% \textbf{a.} Few genome compression values over time (GISAID) illustrating empirical boundedness of sequence complexity over evolution, and the general lack of compressibility of genomes (the maximum entropy rate for 4 letter alphabet is obviously 2 bits/base, achieved by perfectly incompressible sequences). Shaded bands indicate 95\% confidence intervals over replicate lineages. \textbf{b.}  Toy evolution on $[4]^n$ under mutation alone versus mutation with a viability filter that accepts offspring only if they remain within a fixed Hamming distance of a structured template. The plotted statistic is a reference-free compression proxy (compressed bits per symbol using zlib) along replicate lineages; mutation alone drives trajectories toward a max-entropy regime, while the viability filter keeps trajectories bounded away from that regime.
+%% \textbf{c.} The expected discovery rate $\Phi(\mu)$ as a function of the per-site mutation rate $\mu$ for increasing genome lengths $n$ (theory, with Monte Carlo estimates shown as points where available). The maximizer shifts to smaller $\mu$ as $n$ increases, consistent with the inverse-length scaling $\mu^\star \propto 1/n$.
+%% \textbf{d.} The same discovery rate plotted against the per-genome mutation intensity $T = n\mu = \mathbb{E}[M]$. Curves for different $n$ collapse onto a common profile with a maximum near $T \approx 1$; the dashed guide curve shows the predicted $T e^{-T}$ dependence up to a multiplicative constant. This collapse demonstrates that the optimal regime corresponds to a constant $O(1)$ number of mutations per genome per generation.
+%% }\label{figsim}
+
+\caption{
+\textbf{Scaling and collapse of the discovery rate under independent per-site mutation.}
+\textbf{a.} Genome compression values over time (viral genomes from GISAID; \textit{E.~coli} from NCBI; see SI) illustrating empirical boundedness of sequence complexity over evolution and the near-incompressibility of genomes under a reference-free compression proxy. The Shannon ceiling for a four-letter alphabet is $2$ bits/base, achieved by perfectly incompressible sequences. Shaded bands indicate 95\% confidence intervals across genomes within each year.
+\textbf{b.} Toy evolution on $[4]^n$ under mutation alone versus mutation with a viability filter that accepts offspring only if they remain within a fixed Hamming distance of a structured template. The plotted statistic is a reference-free compression proxy (compressed bits per symbol using \texttt{zlib}) along replicate lineages; mutation alone drives trajectories toward a max-entropy regime, while the viability filter maintains bounded complexity.
+\textbf{c.} The expected discovery rate $\Phi(\mu)$ as a function of the per-site mutation rate $\mu$ for increasing genome lengths $n$ (Th. = theory; mc. = Monte Carlo estimates). The maximizer shifts to smaller $\mu$ as $n$ increases, consistent with the inverse-length scaling $\mu^\star \propto 1/n$.
+\textbf{d.} The same discovery rate plotted against the per-genome mutation intensity $T = n\mu$. Curves for different $n$ collapse onto a common profile with a maximum near $T \approx 1$; we illustrate the predicted $T e^{-T}$ dependence up to a multiplicative constant. The collapse demonstrates that the optimal regime corresponds to an $O(1)$ number of mutations per genome per generation.
+}
+\label{figsim}
+\end{figure}
 
 
 \section*{Discussion}
@@ -192,55 +214,30 @@ A useful way to express the optimum is through the per-genome mutation intensity
 \[
 T \;:=\; n\mu \;=\; \mathbb{E}[M],\qquad M\sim{\rm Binomial}(n,\mu),
 \]
-which acts as an intensive ``mutation temperature'' controlling the typical perturbation size. Figure~\ref{figsim} illustrates the scaling directly. In the left panel, $\Phi(\mu)$ plotted against the per-site rate $\mu$ exhibits a single interior maximum whose location shifts left as $n$ increases, consistent with $\mu^\star\propto 1/n$. In the right panel, plotting the same discovery rate against $T=n\mu$ collapses curves for different $n$ onto a common profile with a maximum near $T\approx 1$, matching the predicted $T e^{-T}$ dependence up to a multiplicative constant. The collapse emphasizes that the scaling law is most naturally stated as a constant optimal per-genome perturbation size.
+which acts as an intensive ``mutation temperature'' controlling the typical perturbation size. Figure~\ref{figsim} illustrates the scaling directly.
+In Fig.~\ref{figsim}c, $\Phi(\mu)$ plotted against the per-site rate $\mu$ exhibits a single interior maximum whose location shifts left as $n$ increases, consistent with $\mu^\star\propto 1/n$. In Fig.~\ref{figsim}d, plotting the same discovery rate against $T=n\mu$ collapses curves for different $n$ onto a common profile with a maximum near $T\approx 1$, matching the predicted $Te^{-T}$ dependence up to a multiplicative constant.
+%% In the left panel, $\Phi(\mu)$ plotted against the per-site rate $\mu$ exhibits a single interior maximum whose location shifts left as $n$ increases, consistent with $\mu^\star\propto 1/n$. In the right panel, plotting the same discovery rate against $T=n\mu$ collapses curves for different $n$ onto a common profile with a maximum near $T\approx 1$, matching the predicted $T e^{-T}$ dependence up to a multiplicative constant.
+The collapse emphasizes that the scaling law is most naturally stated as a constant optimal per-genome perturbation size.
+More precisely, the exact finite-$n$ expression involves the factor $(1-\mu)^n$, so that the leading behavior is proportional to $T(1-\mu)^n$; the  $T e^{-T}$ profile is its small-$\mu$ asymptotic form. The existence of an interior optimum at $T=O(1)$ does not depend on the Poisson approximation itself but on the independence and thin-tailed nature of the mutation count distribution.
 
-Our notion of discovery is defined relative to the mutation-induced model. We do not claim that the Hamming sphere is the globally optimal statistical model for an offspring, only that it is the model canonically induced by a local mutation mechanism on sequence space. The substantive claim is upstream: since mutation is the sole source of variation, selection can only act on what mutation supplies. If offspring were always typical draws from the mutation kernel, repeated perturbation would concentrate lineages toward the kernel's typical set, eroding accumulated organization into mutational background. Positive randomness deficiency provides a quantitative, mechanism-independent way to express the minimal sense in which a variant is not merely background mutational noise.
+Our notion of discovery is defined relative to the distribution induced by the mutation mechanism itself. This reference measure is not an external modeling choice but is canonically determined by the perturbation process that supplies variation. Selection can only act on outcomes drawn from this kernel; thus atypicality must be measured relative to it.  We do not claim that the Hamming sphere is the globally optimal statistical model for an offspring, only that it is the model canonically induced by a local mutation mechanism on sequence space. The substantive claim is upstream: since mutation is the sole source of variation, selection can only act on what mutation supplies. If offspring were always typical draws from the mutation kernel, repeated perturbation would concentrate lineages toward the kernel's typical set, eroding accumulated organization into mutational background. Positive randomness deficiency provides a quantitative, mechanism-independent way to express the minimal sense in which a variant is not merely background mutational noise.
 
 The inverse-length scaling is robust to the choice of novelty margin $\Delta$, provided $\Delta$ does not grow with $n$ fast enough to dominate the one-step indexing cost $c(1)=\Theta(\log n)$. In particular, any fixed $\Delta$ or $\Delta=o(\log n)$ yields the same $\mu^\star=\Theta(1/n)$ scaling, with $\Delta$ affecting only the overall rate through the factor $2^{-\Delta}$.
 
 
-\begin{figure}[t]
-\begin{tikzpicture}
-
-% Panel A
-\node (A) at (0,0)
-  {\includegraphics[width=.225\textwidth]{Figures/panela}};
-
-% Panel B (below A)
-\node[anchor=north] (B) at (A.south)
-  {\includegraphics[width=.225\textwidth]{Figures/PCT}};
-
-% Panel C (to the right of A)
-\node[anchor=north west] (C) at (A.north east)
-  {\includegraphics[width=.225\textwidth]{Figures/temperature_scaling_sim.pdf}};
-
-\end{tikzpicture}
-
-%% \begin{tikzpicture}
-%% \node[] (A) at (0,0) {  \includegraphics[width=.225\textwidth]{Figures/panela}};
-%%   \node[anchor=north] (B) at (A.south) { \includegraphics[width=.225\textwidth]{Figures/PCT}
-%%  \node[anchor=north west] (C) at (A.north east)}; {\includegraphics[width=.225\textwidth]{Figures/temperature_scaling_sim.pdf}};
-%% \end{tikzpicture}
-\caption{
-Scaling and collapse of the discovery rate under independent per-site mutation.
-\textbf{a.} The expected discovery rate $\Phi(\mu)$ as a function of the per-site mutation rate $\mu$ for increasing genome lengths $n$ (theory and Monte Carlo simulation). The location of the maximum shifts left as $n$ increases, consistent with the inverse-length scaling $\mu^\star \propto 1/n$.
-\textbf{b.} The same discovery rate plotted against the per-genome mutation intensity $T = n\mu$. Curves for different $n$ collapse onto a common profile with a maximum near $T \approx 1$, matching the predicted $T e^{-T}$ dependence up to a multiplicative constant. This collapse demonstrates that the optimal regime corresponds to a constant $O(1)$ number of mutations per genome per generation. \textbf{c.} We simulate evolution on $[4]^n$ under independent per-site mutation starting from a structured template sequence.
-The plotted statistic is a reference-free compression proxy (compressed bits per symbol using \texttt{zlib}) computed along replicate lineages.
-Under mutation alone, compressibility decreases (bits per symbol increases) toward a high-entropy regime; under a viability filter that accepts offspring only if they remain within a fixed Hamming distance of the template, trajectories remain bounded away from that regime.
-Shaded bands indicate 95\% confidence intervals over replicate lineages.
-\textbf{d.} A few viral genome compression values over time, data from GISAID
-}\label{figsim}
-\end{figure}
 
 \subsection*{Why focus on discovery probability?}
-
-A natural objection to the approach here could be  to ask why evolution should be viewed as optimizing the probability of structure discovery, rather than a more direct quantity such as expected fitness gain~\cite{Lynch2010,SniegowskiRaynes2013,Hershberg2015}. We do not claim that natural selection explicitly maximizes the objective we write down, nor do we attempt to model fitness effects. Instead, the discovery probability isolates an upstream constraint imposed by mutation itself on the supply of potentially selectable variants. Mutation generates variants blindly, without access to fitness \emph{a priori}; selection acts only after variants have been supplied. In this setting it is well-posed to ask which per-site mutation rate maximizes the expected rate at which mutation produces outcomes that are atypical relative to the mutation kernel, since such outcomes are precisely those that can, in principle, be preferentially amplified rather than washed into the typical mutational background.
+Why should evolution optimize the probability of structure discovery rather than a more direct quantity such as expected fitness gain~\cite{Lynch2010,SniegowskiRaynes2013,Hershberg2015}? Mutation has no access to fitness: it is a blind local perturbation mechanism that generates variants without foresight, and selection acts only after these variants have been produced. Any objective defined in terms of fitness therefore lives downstream of mutation and cannot be optimized at the level of the generative process itself. The discovery probability instead isolates an upstream constraint imposed by mutation on the supply of selectable variants. %It is therefore well posed to ask which per-site mutation rate maximizes the expected rate at which mutation produces outcomes that are atypical relative to its own kernel, since only such outcomes can, in principle, be preferentially amplified rather than washed into the typical mutational background.
 
 It is also useful to situate this result relative to classical ``error threshold'' arguments. Eigen-type frameworks constrain mutation from above by requiring that inherited information remain stable under copying errors~\cite{Eigen1971}. Our result is different in kind: it identifies an interior optimum for the upstream \emph{supply} of mutation-atypical variants under blind local perturbations, without invoking a fitness landscape or equilibrium population genetics. The fact that both perspectives emphasize the $U=T=n\mu=O(1)$ regime suggests that Drake's rule may reflect the intersection of two generic pressures: fidelity constraints that limit loss of existing information and supply constraints that limit how often mutation produces variants sufficiently atypical to be preferentially amplified. In this sense, operating near one mutation per genome per generation can be read as a regime in which both retention and exploration remain nontrivial.
+
+If the perturbation kernel becomes strongly non-local (e.g., recombination, large indels) or highly overdispersed in mutation count ($e.g.$, mutator mixtures or burst-like replication errors), the detailed functional form of $\Phi(T)$ can change and the maximizing value may shift. However, for any local, thin-tailed perturbation kernel parameterized by an intensive scale $T$, the supply/erosion tradeoff generically produces an interior optimum at order-one $T$.
+
 
 \subsection*{Beyond biological specificity}
 
 Although motivated by biological evolution, the derivation depends only on three ingredients: a discrete configuration space, a local stochastic perturbation mechanism, and the requirement that adaptive progress requires access to outcomes that are atypical relative to the perturbation mechanism itself. Any system that explores a high-dimensional space via local random perturbations (a blind search unaware of downstream fitness functions) faces an analogous tradeoff: perturbations that are too small rarely generate statistically exceptional outcomes, while perturbations that are too large overwhelm any low-complexity deviation by pushing outcomes into exponentially large neighborhoods in which the probability of exceptionality is sharply suppressed. The resulting optimum selects an $O(1)$ intensive perturbation scale, made visible here by the collapse of discovery-rate curves under the parameter $T$ in Fig.~\ref{figsim}.
+
 
 
 
@@ -305,5 +302,7 @@ We then embed this local rarity within an independent per-site mutation model $M
 \bibliography{kevo}
 
 \include{SIpnas.tex}
- 
+
+
+
 \end{document}

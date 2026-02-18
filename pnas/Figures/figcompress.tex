@@ -1,0 +1,540 @@
+
+   \pgfplotsset{
+    discard if/.style 2 args={
+        x filter/.append code={
+            \edef\tempa{\thisrow{#1}}
+            \edef\tempb{#2}
+            \ifx\tempa\tempb
+                \def\pgfmathresult{inf}
+            \fi
+        }
+    },
+    discard if not/.style 2 args={
+        x filter/.append code={
+            \edef\tempa{\thisrow{#1}}
+            \edef\tempb{#2}
+            \ifx\tempa\tempb
+            \else
+                \def\pgfmathresult{inf}
+            \fi
+        }
+    }
+}
+
+\begin{tikzpicture}[font=\bf\sffamily\fontsize{9}{9}\selectfont]
+  \def\COLA{black!80}
+  \def\COLB{Red4}
+  \def\COLC{MediumBlue}
+  \def\COLD{Green4}
+ 
+  \def\WDT{1.35in}
+  \def\HGT{1.35in}
+  \def\DATA{Figures/genomecompress.csv}
+  \def\TEMP{Figures/temperature_scaling_sim_data.csv}
+
+  
+ \node[anchor=north west] (A) at (0,0) { \begin{tikzpicture}[anchor=center]\begin{axis}[black, legend columns=2,
+      legend style={anchor=west,at={(-.25,1.25)},inner sep=3pt,draw=none,fill=white,fill opacity=.850,align=right,text opacity=1,font=\bf\sffamily\fontsize{7}{9}\selectfont},
+      axis line style={lightgray, opacity=0.01, thin},%
+        enlargelimits=true, 
+        axis on top=true,
+        width=\WDT,
+        height=\HGT,
+        scale only axis=true,
+            tick align=outside,
+    grid=both,
+    grid style={dashed,semithick,draw=black, opacity=.25},
+    xlabel style={yshift=-.010in},
+    major tick length=0pt,
+xticklabel style={
+    /pgf/number format/.cd,
+    fixed,
+    precision=0,
+    1000 sep={}
+},
+yticklabel style={
+    /pgf/number format/.cd,
+    fixed,
+    precision=3
+},xlabel={year},ylabel={$\langle \textrm{bits/base} \rangle$},
+  xmin=2019.5    ]
+
+
+% =========================
+% H3N2
+% =========================
+\addplot[smooth,
+    name path=H3N2upper,
+    draw=none,
+    forget plot
+]
+table[
+    col sep=comma,
+    x=year,
+    y expr=\thisrow{ci_high}*1.002,
+    discard if not={organism}{H3N2}
+] {\DATA};
+
+\addplot[smooth,
+    name path=H3N2lower,
+    draw=none,
+    forget plot
+]
+table[
+    col sep=comma,
+    x=year,
+    y expr=\thisrow{ci_low}*0.998,
+    discard if not={organism}{H3N2}
+] {\DATA};
+
+\addplot[
+    \COLA,
+    fill=\COLA,
+    fill opacity=0.15,
+    draw=none,
+    forget plot
+] fill between[of=H3N2upper and H3N2lower];
+
+\addplot[
+    \COLA,
+    smooth,
+    thick,
+    mark=*,
+    mark options={scale=.9,fill=white}
+]
+table[
+    col sep=comma,
+    x=year,
+    y=avg_bits_per_base_corrected,
+    discard if not={organism}{H3N2}
+] {\DATA};
+\addlegendentry{H3N2 Influenza A}
+
+
+
+% =========================
+% E. coli
+% =========================
+\addplot[smooth,
+    name path=ECOLIupper,
+    draw=none,
+    forget plot
+]
+table[
+    col sep=comma,
+    x=year,
+    y expr=\thisrow{ci_high}*1.001,
+    discard if not={organism}{ecoli}
+] {\DATA};
+
+\addplot[smooth,
+    name path=ECOLIlower,
+    draw=none,
+    forget plot
+]
+table[
+    col sep=comma,
+    x=year,
+    y expr=\thisrow{ci_low}*0.999,
+    discard if not={organism}{ecoli}
+] {\DATA};
+
+\addplot[
+    \COLC,
+    fill=\COLC,
+    fill opacity=0.15,
+    draw=none,
+    forget plot
+] fill between[of=ECOLIupper and ECOLIlower];
+
+\addplot[
+    \COLC,
+    smooth,
+    thick,
+    mark=*,
+    mark options={scale=.7,fill=\COLC}
+]
+table[
+    col sep=comma,
+    x=year,
+    y=avg_bits_per_base_corrected,
+    discard if not={organism}{ecoli}
+] {\DATA};
+\addlegendentry{E.\ coli}
+
+
+% =========================
+% SARS-CoV-2
+% =========================
+\addplot[smooth,
+    name path=COVupper,
+    draw=none,
+    forget plot
+]
+table[
+    col sep=comma,
+    x=year,
+    y expr=\thisrow{ci_high}*1,
+    discard if not={organism}{hCOV-19}
+] {\DATA};
+
+\addplot[smooth,
+    name path=COVlower,
+    draw=none,
+    forget plot
+]
+table[
+    col sep=comma,
+    x=year,
+    y expr=\thisrow{ci_low}*1,
+    discard if not={organism}{hCOV-19}
+] {\DATA};
+
+\addplot[
+    \COLB,
+    fill=\COLB,
+    fill opacity=0.15,
+    draw=none,
+    forget plot
+] fill between[of=COVupper and COVlower];
+
+\addplot[
+    \COLB,
+    smooth,
+    thick,
+    mark=*,
+    mark options={scale=.9,fill=white}
+]
+table[
+    col sep=comma,
+    x=year,
+    y=avg_bits_per_base_corrected,
+    discard if not={organism}{hCOV-19}
+] {\DATA};
+\addlegendentry{SARS-CoV-2}
+
+% =========================
+% Mpox
+% =========================
+\addplot[smooth,
+    name path=POXupper,
+    draw=none,
+    forget plot
+]
+table[
+    col sep=comma,
+    x=year,
+    y expr=\thisrow{ci_high}*1.0020,
+    discard if not={organism}{Pox}
+] {\DATA};
+
+\addplot[smooth,
+    name path=POXlower,
+    draw=none,
+    forget plot
+]
+table[
+    col sep=comma,
+    x=year,
+    y expr=\thisrow{ci_low}*0.998,
+    discard if not={organism}{Pox}
+] {\DATA};
+
+\addplot[
+    \COLD,
+    fill=\COLD,
+    fill opacity=0.15,
+    draw=none,
+    forget plot
+] fill between[of=POXupper and POXlower];
+
+\addplot[
+    \COLD,
+    smooth,
+    thick,
+    mark=square*,
+    mark options={scale=.7,fill=\COLD}
+]
+table[
+    col sep=comma,
+    x=year,
+    y=avg_bits_per_base_corrected,
+    discard if not={organism}{Pox}
+] {\DATA};
+\addlegendentry{Mpox}
+       
+
+ 
+  \end{axis}
+\end{tikzpicture}
+ };
+
+
+       \def\OPC{.5}
+       \def\SCL{.6}
+\def\COLA{black!50}
+  \def\COLB{Green2}
+  \def\COLC{MediumBlue}
+  \def\COLD{Green4}
+\def\HGTA{1.3in}
+
+       \node[anchor=south west] (B) at ([xshift=.2in]A.south east) { \begin{tikzpicture}[anchor=center]
+
+
+           \begin{axis}[black, legend columns=2,
+      legend style={anchor=west,at={(-.37,1.22)},inner sep=3pt,draw=none,fill=white,fill opacity=.850,align=right,text opacity=1,font=\bf\sffamily\fontsize{7}{9}\selectfont},
+      axis line style={lightgray, opacity=0.01, thin},%
+        enlargelimits=true, 
+        axis on top=true,
+        width=\WDT,
+        height=\HGTA,
+        scale only axis=true,
+            tick align=outside,
+    grid=major,
+    grid style={dashed,semithick,draw=black, opacity=.25},
+    xlabel style={yshift=-.010in},
+    major tick length=0pt,
+     minor tick length=0pt,
+   xmode=log,ymode=log,
+   xlabel={mutation rate  $\mu$},ylabel={discovery rate},
+   ymin=1e-50
+     ]
+
+
+\addplot[\COLA, smooth, thick, mark=none,mark options={scale=.4,fill=white}] table [ col sep=comma,
+        y=phi_theory,
+        x expr=\thisrow{mu}, discard if not={n}{1000}
+] {\TEMP};
+\addlegendentry{Th. $n=1000$}
+
+\addplot[\COLA, smooth, only marks, , mark=*,mark options={scale=\SCL,,opacity=\OPC}] table [ col sep=comma,
+       y=phi_mc,
+       x expr=\thisrow{mu}, discard if not={n}{1000}
+] {\TEMP};
+\addlegendentry{mc. $n=1000$}
+
+\addplot[\COLB, smooth, thick, mark=none,mark options={scale=.4,fill=white}] table [ col sep=comma,
+        y=phi_theory,
+        x expr=\thisrow{mu}, discard if not={n}{10000}
+        ] {\TEMP};
+\addlegendentry{Th. $n=10,000$}
+\addplot[\COLB, smooth, , only marks, mark=*,mark options={scale=\SCL,,opacity=\OPC}] table [ col sep=comma,
+        y=phi_mc,
+        x expr=\thisrow{mu}, discard if not={n}{10000}
+        ] {\TEMP};
+\addlegendentry{mc. $n=10,000$}
+
+
+
+\addplot[\COLC, smooth, thick, mark=none,mark options={scale=.4,fill=white}] table [ col sep=comma,
+        y=phi_theory,
+        x expr=\thisrow{mu}, discard if not={n}{100000}
+        ] {\TEMP};
+\addlegendentry{Th. $n=100,000$}
+
+\addplot[\COLC, smooth, , only marks, mark=*,mark options={scale=\SCL,,opacity=\OPC}] table [ col sep=comma,
+        y=phi_mc,
+        x expr=\thisrow{mu}, discard if not={n}{100000}
+        ] {\TEMP};
+\addlegendentry{mc. $n=100,000$}
+
+
+ 
+  \end{axis}
+\end{tikzpicture}
+ };
+
+
+
+
+
+
+\def\GuideScale{3e-07}
+\def\OPCA{1}
+
+ \node[anchor=north west] (C) at ([yshift=-.3in]B.south west) { \begin{tikzpicture}[anchor=center]\begin{axis}[black, legend columns=2,
+      legend style={anchor=west,at={(.2,1.25)},inner sep=3pt,draw=none,fill=white,fill opacity=.850,align=right,text opacity=1,font=\bf\sffamily\fontsize{9}{9}\selectfont},
+      axis line style={lightgray, opacity=0.01, thin},%
+        enlargelimits=true, 
+        axis on top=false,
+        width=\WDT,
+        height=\HGT,
+        scale only axis=true,
+            tick align=outside,
+    grid=major,
+    grid style={dashed,semithick,draw=black, opacity=.250},
+    xlabel style={yshift=-.040in,xshift=-.2in},
+    major tick length=0pt,
+     minor tick length=0pt,
+   xmode=log,ymode=log,   ymin=1e-50,
+xlabel={mutation temperature $T=n\mu$},ylabel={discovery rate}, use fpu=true,  /pgf/fpu/output format=fixed,
+   ]
+
+
+\addplot[forget plot,\COLA, smooth, ,only marks, ,opacity=\OPC,  mark=*,mark options={scale=\SCL,opacity=\OPC}] table [ col sep=comma,
+        y=phi_mc,
+        x expr=\thisrow{mu}*1000, discard if not={n}{1000}
+] {\TEMP};
+
+\addplot[forget plot,\COLB, smooth, , only marks,,opacity=\OPC, mark=*,mark options={scale=\SCL,,opacity=\OPC}] table [ col sep=comma,
+        y=phi_mc,
+        x expr=\thisrow{mu}*10000, discard if not={n}{10000}
+] {\TEMP};
+
+\addplot[forget plot,\COLC, smooth, , only marks,,opacity=\OPC, mark=*,mark options={scale=\SCL,,opacity=\OPC}] table [ col sep=comma,
+        y=phi_mc,
+        x expr=\thisrow{mu}*100000, discard if not={n}{100000}
+        ] {\TEMP};
+
+
+
+
+       
+\addplot[forget plot,\COLA, smooth, thick,,opacity=\OPCA, mark=none,mark options={scale=.4,fill=white,opacity=\OPC}] table [ col sep=comma,
+        y=phi_theory,
+        x expr=\thisrow{mu}*1000, discard if not={n}{1000}
+] {\TEMP};
+
+
+
+\addplot[forget plot,\COLB, smooth, thick,,opacity=\OPCA, mark=none,mark options={scale=.4,fill=white,opacity=\OPC}] table [ col sep=comma,
+        y=phi_theory,
+        x expr=\thisrow{mu}*10000, discard if not={n}{10000}
+] {\TEMP};
+
+
+
+\addplot[forget plot,\COLC, smooth, thick, ,opacity=\OPCA,mark=none,mark options={scale=.4,fill=white,opacity=\OPC}] table [ col sep=comma,
+        y=phi_theory,
+        x expr=\thisrow{mu}*100000, discard if not={n}{100000}
+        ] {\TEMP};
+
+
+\addplot[
+    Red1,
+    ultra thick,    domain=1e-2:1e2,    
+unbounded coords=discard,
+    samples=200,                on layer=foreground,
+]
+{ \GuideScale *x*exp(-x) };
+\addlegendentry{$T e^{-T}$}
+ 
+
+
+  \end{axis}
+\end{tikzpicture}
+ };
+
+
+       
+\def\HGTB{1.32in}
+\def\TOY{Figures/figS1_toy_entropy_proxy_plotdata.csv}
+\def\COLX{black}
+\def\COLY{DarkOrange2}
+\node[anchor=north west] (D) at ($(C.north west)!(A.west)!(C.north)$) {
+\begin{tikzpicture}[anchor=center]\begin{axis}[black, legend columns=1,
+      legend style={anchor=west,at={(-.2,1.3)},inner sep=3pt,draw=none,fill=white,fill opacity=.850,align=right,text opacity=1,font=\bf\sffamily\fontsize{9}{9}\selectfont},
+      axis line style={lightgray, opacity=0.01, thin},%
+        enlargelimits=true, 
+        axis on top=false,
+        width=\WDT,
+        height=\HGTB,
+        scale only axis=true,
+            tick align=outside,
+    grid=major,
+    grid style={dashed,semithick,draw=black, opacity=.250},
+    xlabel style={yshift=.020in,xshift=-.2in},
+    major tick length=0pt,
+     minor tick length=0pt,  set layers=standard,
+     %xmode=log,ymode=log,   ymin=1e-50,
+     ylabel style={align=center},
+xlabel={generation},ylabel={Bigram conditional entropy\\ $H(X_t\mid X_{t-1})$ (bits/symbol)}, use fpu=true,  /pgf/fpu/output format=fixed,
+   ]
+
+
+\addplot[, very thick, dashed, smooth,\COLX, opacity=1,, mark=none ] table [ col sep=comma,
+        y=mut_mean,
+        x=generation, %% discard if not={n}{1000}
+] {\TOY};
+\addlegendentry{Mutation only}
+
+\addplot[smooth,
+    name path=mutlower,
+    draw=none,
+    forget plot
+]
+table[
+    col sep=comma,
+    x=generation,
+    y expr=\thisrow{mut_ci_low}*0.99,
+] {\TOY};
+\addplot[smooth,
+    name path=mutupper,
+    draw=none,
+    forget plot
+]
+table[
+    col sep=comma,
+    x=generation,
+    y expr=\thisrow{mut_ci_high}*1.02,
+] {\TOY};
+
+\addplot[
+    \COLX,
+    fill=\COLX,
+    fill opacity=0.35,
+    draw=none,
+    forget plot
+] fill between[of=mutupper and mutlower];
+
+
+\addplot[, very thick, dashed, smooth,\COLY, smooth, mark=none ] table [ col sep=comma,
+        y=sel_mean,
+        x=generation, %% discard if not={n}{1000}
+] {\TOY};
+\addlegendentry{Mutation + selective filter}
+
+\addplot[smooth,
+    name path=mutsellower,
+    draw=none,
+    forget plot
+]
+table[
+    col sep=comma,
+    x=generation,
+    y expr=\thisrow{sel_ci_low}*0.99,
+] {\TOY};
+\addplot[smooth,
+    name path=mutselupper,
+    draw=none,
+    forget plot
+]
+table[
+    col sep=comma,
+    x=generation,
+    y expr=\thisrow{sel_ci_high}*1.02,
+] {\TOY};
+
+\addplot[
+    \COLD,
+    fill=\COLY,
+    fill opacity=0.5,
+    draw=none,
+    forget plot
+] fill between[of=mutselupper and mutsellower];
+
+
+  \end{axis}
+\end{tikzpicture}
+
+  };
+
+
+
+
+
+  \node[anchor=south west] (L1) at (A.north west) {{\Large a.}};
+  \node[anchor=south west] (L2) at (B.north west) {{\Large c.}};
+  \node[anchor=south west] (L3) at (C.north west) {{\Large d.}};
+  \node[anchor=south west] (L4) at (D.north west) {{\Large b.}};
+\end{tikzpicture}

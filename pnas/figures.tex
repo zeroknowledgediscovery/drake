@@ -1,0 +1,145 @@
+\PassOptionsToPackage{usenames,x11names, dvipsnames, svgnames}{xcolor}
+\documentclass[9pt,twocolumn]{IEEEtran}
+% Use the lineno option to display guide line numbers if required.
+\usepackage{orcidlink}   % <— add this
+% \input{preamble_ieee.tex}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+%\usepackage{pdfpages}
+%\usepackage{shellesc}
+%\ShellEscape{pdflatex si}
+\usetikzlibrary{shapes,calc,shadows,fadings,arrows,decorations.pathreplacing,automata,positioning}
+%\usepackage{hyperref}
+\usetikzlibrary{external}
+\tikzexternalize[prefix=./Figures/External/]% activate
+\tikzexternaldisable 
+\usetikzlibrary{decorations.text}
+\usepgfplotslibrary{colorbrewer} 
+\usepgfplotslibrary{statistics}
+\usepgfplotslibrary{fillbetween}
+%\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage[algo2e,ruled,vlined]{algorithm2e}
+
+\usepackage{mathtools}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+
+\newtheorem{exmpl}{Example}
+\newtheorem{rem}{Remark}
+\newtheorem{notn}{Notation}
+\usepackage{xspace}
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}%
+
+\newcommand{\set}[1]{\left\{ #1 \right\}}
+\newcommand{\paren}[1]{\left( #1 \right)}
+\newcommand{\bracket}[1]{\left[ #1 \right]}
+% \newcommand{\norm}[1]{\left\Vert #1 \right\Vert}
+\newcommand{\nrm}[1]{\left\llbracket{#1}\right\rrbracket}
+\newcommand{\parenBar}[2]{\paren{#1\,{\left\Vert\,#2\right.}}}
+\newcommand{\parenBarl}[2]{\paren{\left.#1\,\right\Vert\,#2}}
+\newcommand{\ie}{$i.e.$\xspace}
+\newcommand{\addcitation}{\textcolor{black!50!red}{\textbf{ADD CITATION}}}
+\newcommand{\subtochange}[1]{{\color{black!50!green}{#1}}}
+\newcommand{\tobecompleted}{{\color{black!50!red}TO BE COMPLETED.}}
+
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\expect}{\mathbf{E}}
+\DeclareMathOperator*{\var}{\mathbf{Var}}
+
+\newcommand{\pIn}{\mathscr{P}_{\textrm{in}}}
+\newcommand{\pOut}{\mathscr{P}_{\textrm{out}}}
+\newcommand{\aIn}[1][\Sigma]{#1_{\textrm{in}}}
+\newcommand{\aOut}[1][\Sigma]{#1_{\textrm{out}}}
+\newcommand{\xin}[1]{#1_{\textrm{in}}}
+\newcommand{\xout}[1]{#1_{\textrm{out}}}
+
+\newcommand{\R}{\mathbb{R}} % Set of real numbers
+\newcommand{\F}[1][]{\mathcal{F}_{#1}}
+\newcommand{\SR}{\mathcal{S}} % Semiring of sets
+\newcommand{\RR}{\mathcal{R}} % Ring of sets
+\newcommand{\N}{\mathbb{N}} % Set of natural numbers (0 included)
+
+\newcommand{\pitilde}{\widetilde{\pi}}
+\newcommand{\Pitilde}{\widetilde{\Pi}}
+
+\newcommand{\Pp}[1][n]{\mathscr{P}^+_{#1}}
+%% ## Equation Space Control---------------------------
+\def\EQSP{2pt}
+\newcommand{\mltlne}[2][\EQSP]{\begingroup\setlength\abovedisplayskip{#1}\setlength\belowdisplayskip{#1}\begin{equation}\begin{multlined} #2 \end{multlined}\end{equation}\endgroup\noindent}
+\newcommand{\cgather}[2][\EQSP]{\begingroup\setlength\abovedisplayskip{#1}\setlength\belowdisplayskip{#1}\begin{gather} #2 \end{gather}\endgroup\noindent}
+\newcommand{\cgathers}[2][\EQSP]{\begingroup\setlength\abovedisplayskip{#1}\setlength\belowdisplayskip{#1}\begin{gather*} #2 \end{gather*}\endgroup\noindent}
+\newcommand{\calign}[2][\EQSP]{\begingroup\setlength\abovedisplayskip{#1}\setlength\belowdisplayskip{#1}\begin{align} #2 \end{align}\endgroup\noindent}
+\newcommand{\caligns}[2][\EQSP]{\begingroup\setlength\abovedisplayskip{#1}\setlength\belowdisplayskip{#1}\begin{align*} #2 \end{align*}\endgroup\noindent}
+\newcommand{\mnp}[2]{\begin{minipage}{#1}#2\end{minipage}} 
+\newif\iftikzX
+\tikzXtrue
+\tikzXfalse 
+\newif\ifFIGS  
+\FIGSfalse  
+\FIGStrue
+
+\def\EXTENDEDDATA{Extended Data\xspace}
+\def\SUPPLEMENTARY{Supplementary\xspace}
+\def\Methods{Methods\xspace}
+\newcounter{Dcounter}
+\setcounter{Dcounter}{1}
+\newcommand{\DQS}[1]{
+    \marginpar{
+      \tikzexternaldisable 
+      \tikz{
+        \node[
+          rounded corners=5pt,
+          draw=none,
+          thick,
+          fill=black!10,
+          font=\sffamily\fontsize{7}{8}\selectfont
+        ]{\mnp{.3in} {\color{Red3}\raggedright  \#\theDcounter.~#1}}; 
+      }
+    }
+  \stepcounter{Dcounter}\xspace
+}
+
+\newcommand{\K}{K}
+\newcommand{\Hamming}{\mathrm{H}}
+\newcommand{\SIapp}{SI Appendix}
+
+\pgfplotsset{set layers=standard}
+\pgfplotsset{compat=1.18} % or your version
+   \pgfplotsset{
+        % define the layers you need.
+        % (Don't forget to add `main' somewhere in that list!!)
+        layers/my layer set/.define layer set={
+            background,
+            main,
+            foreground
+        }{
+            % you could state styles here which should be moved to
+            % corresponding layers, but that is not necessary here.
+            % That is why we don't state anything here
+        },
+        % activate the newly created layer set
+        set layers=my layer set,
+}
+\begin{document}  
+
+
+
+\begin{figure}
+  \tikzexternalenable 
+  \tikzsetnextfilename{plotfig}
+\centering
+%\tikzXfalse 
+\tikzXtrue
+  \iftikzX  
+\input{Figures/figcompress}
+\else
+  \includegraphics[width=.35\textwidth]{Figures/External/plotfig}
+\fi
+\end{figure}
+ 
+\end{document}
