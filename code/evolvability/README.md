@@ -23,7 +23,7 @@ selection strength.
 ## Quick Start
 
 Run a typical experiment:
-
+```
 python3 simulate_rate_evolution.py\
 --env-site-probs 0.01 0.015 0.02\
 --population 5000\
@@ -32,7 +32,7 @@ python3 simulate_rate_evolution.py\
 --reps 64\
 --workers 8\
 --outdir results
-
+```
 ------------------------------------------------------------------------
 
 ## Core Simulation Logic
@@ -63,7 +63,7 @@ General form:
 python3 simulate_rate_evolution.py \[OPTIONS\]
 
 ### Core Parameters
-
+``
 --population\
 Population size
 
@@ -78,9 +78,9 @@ Number of replicates
 
 --workers\
 Number of parallel processes
-
+``
 ### Mutation Parameters
-
+``
 --starts\
 Initial genomic mutation intensities
 
@@ -95,20 +95,20 @@ Probability of modifier mutation
 
 --log-step-sd\
 Standard deviation of modifier step size
-
+```
 ### Selection Parameters
-
+```
 --mismatch-cost\
 Fitness penalty per mismatch
 
 --offspring-pool-factor\
 Number of candidate offspring per survivor
-
+```
 ### Environmental Parameters
-
+```
 --env-site-probs\
 Probability of environmental change per site
-
+```
 ------------------------------------------------------------------------
 
 ## Output Files
@@ -127,17 +127,17 @@ parameter JSON metadata
 ## Typical Workflow
 
 1)  Run simulation
-
+```
 python3 simulate_rate_evolution.py ...
-
+```
 2)  Recompute summary
-
+```
 python3 recompute_summary_log.py raw.csv
-
+```
 3)  Generate plot
-
+```
 python3 plot_panel_b.py summary.csv
-
+```
 ------------------------------------------------------------------------
 
 ## Reproducibility
