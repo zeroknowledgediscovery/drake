@@ -1,1 +1,0 @@
-python modifier_sim_explicit_genome_offspring_viability_parallel_cli.py   --reps 64   --generations 1000   --workers 12   --population 500   --genome-length 200  --env-changes 1
