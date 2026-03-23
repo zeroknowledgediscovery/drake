@@ -1,0 +1,65 @@
+\begin{tikzpicture}[anchor=center]
+\def\OPC{.5}
+\def\SCL{.7}
+\def\COLA{black!50}
+\def\COLB{Green2}
+\def\COLC{MediumBlue}
+\def\COLD{Green4}
+\begin{axis}[black, legend columns=3,
+legend style={anchor=west,at={(-.42,1.175)},inner sep=3pt,draw=none,fill=white,fill opacity=.850,align=right,text opacity=1,font=\bf\sffamily\fontsize{9}{9}\selectfont},
+axis line style={lightgray, opacity=0.01, thin},%
+enlargelimits=true, 
+axis on top=true,
+width=\WDT,
+height=\HGTB,
+scale only axis=true,
+tick align=outside,
+grid=major,
+grid style={dashed,semithick,draw=black, opacity=.25},
+xlabel style={yshift=-.010in},
+major tick length=0pt,
+minor tick length=0pt,
+xmode=log,ymode=log,
+xlabel={mutation rate  $\mu$},ylabel={discovery rate},
+ylabel style={yshift=-.07in},
+ymin=1e-50
+  ]
+  
+\addplot[\COLA, smooth, very thick, mark=none,mark options={scale=.4,fill=white}] table [ col sep=comma,
+y=phi_theory,
+x expr=\thisrow{mu}, discard if not={n}{1000}
+] {\TEMP};
+\addlegendentry{Th. $n=1000$}
+%
+\addplot[\COLB, smooth, very thick, mark=none,mark options={scale=.4,fill=white}] table [ col sep=comma,
+y=phi_theory,
+x expr=\thisrow{mu}, discard if not={n}{10000}
+] {\TEMP};
+\addlegendentry{Th. $n=10,000$}
+%
+\addplot[\COLC, smooth, very thick, mark=none,mark options={scale=.4,fill=white}] table [ col sep=comma,
+y=phi_theory,
+x expr=\thisrow{mu}, discard if not={n}{100000}
+] {\TEMP};
+\addlegendentry{Th. $n=100,000$}
+%
+\addplot[\COLA, smooth, only marks, , mark=*,mark options={scale=\SCL,,opacity=\OPC}] table [ col sep=comma,
+y=phi_mc,
+x expr=\thisrow{mu}, discard if not={n}{1000}
+] {\TEMP};
+\addlegendentry{mc. $n=1000$}
+%
+\addplot[\COLB, smooth, , only marks, mark=*,mark options={scale=\SCL,,opacity=\OPC}] table [ col sep=comma,
+y=phi_mc,
+x expr=\thisrow{mu}, discard if not={n}{10000}
+] {\TEMP};
+\addlegendentry{mc. $n=10,000$}
+%
+\addplot[\COLC, smooth, , only marks, mark=*,mark options={scale=\SCL,,opacity=\OPC}] table [ col sep=comma,
+y=phi_mc,
+x expr=\thisrow{mu}, discard if not={n}{100000}
+] {\TEMP};
+\addlegendentry{mc. $n=100,000$}
+%
+\end{axis}
+\end{tikzpicture}

@@ -108,23 +108,35 @@
 \newcommand{\Hamming}{\mathrm{H}}
 \newcommand{\SIapp}{SI Appendix}
 
-\pgfplotsset{set layers=standard}
-\pgfplotsset{compat=1.18} % or your version
-   \pgfplotsset{
-        % define the layers you need.
-        % (Don't forget to add `main' somewhere in that list!!)
-        layers/my layer set/.define layer set={
-            background,
-            main,
-            foreground
-        }{
-            % you could state styles here which should be moved to
-            % corresponding layers, but that is not necessary here.
-            % That is why we don't state anything here
-        },
-        % activate the newly created layer set
-        set layers=my layer set,
-}
+%% \pgfplotsset{set layers=standard}
+%% \pgfplotsset{compat=1.18} % or your version
+%%    \pgfplotsset{
+%%         % define the layers you need.
+%%         % (Don't forget to add `main' somewhere in that list!!)
+%%         layers/my layer set/.define layer set={
+%%             background,
+%%             main,
+%%             foreground
+%%         }{
+%%             % you could state styles here which should be moved to
+%%             % corresponding layers, but that is not necessary here.
+%%             % That is why we don't state anything here
+%%         },
+%%         % activate the newly created layer set
+%%         set layers=my layer set,
+%% }
+
+\usepackage{iftex}
+
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage{lmodern}
+\else
+  \usepackage{fontspec}
+  \setmainfont{Latin Modern Roman}
+\fi
+
+
 \begin{document}  
 
 

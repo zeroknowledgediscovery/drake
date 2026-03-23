@@ -1,0 +1,147 @@
+%%%%%%%%%%%%%%%%%%%%%% LaTeX Resume Template %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%  Ishanu Chattopadhyay  ixc128@psu.edu%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Document Setup %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\documentclass[10pt]{article}
+\documentclass[9pt,onecolumn,compsoc]{IEEEtran}
+\let\labelindent\relax
+\usepackage{enumitem}
+\usepackage[letterpaper, top=.5cm, left=2.5cm, right=3.0cm, bottom=2.0cm, includehead, includefoot]{geometry}
+%
+\input{preamble.tex} 
+%\usepackage[printwatermark]{xwatermark}
+\usepackage{wallpaper}
+\usepackage{wasysym}
+\usepackage[misc]{ifsym}
+%\usepackage{applicationN}
+\usepackage[normalem]{ulem}
+\usepackage{epigraph} 
+%\usepackage{pifont}
+%\usepackage{fancyhdr}
+\newcommand{\Space}{\vspace{10pt}}
+\newcommand{\SpaceS}{\vspace{4pt}}
+%%%%%%%%%%%%%%%%%%%%%%%%% Begin CV Document %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tikzexternalize[prefix=./Figures/ExtApp/]% activate externalization!
+\tikzexternaldisable
+\newcommand{\ColorA}{\color{black!70}}
+\newcommand{\ColorB}{\color{Red4!10!black}}
+\newcommand{\ColorD}{\color{darkgray}}
+\newcommand{\ColorBb}{\ColorB}
+\newcommand{\ColorE}{\color{darkgray}}
+\newcommand{\ColorX}{\color{Blue3}}
+\def\Me#1{\def\me{#1}}
+\Me{\sffamily\ColorA {\bf \fontsize{10}{10}\selectfont\color{IndianRed4}Ishanu Chattopadhyay}\\
+Department of Internal  Medicine\\
+%Institute for Genomics \& Systems Biology\\
+%Computation Institute\\
+%University of Chicago\\
+760 Press Avenue\\
+Healthy Kentucky Research Building, Room 367\\
+Lexington, KY 40508\\
+\phone: 814 5315312\\
+\Letter: ishanu\_ch@uky.edu\\{\fontsize{7}{7}\selectfont\sffamily\color{Red3}
+\href{https://zed.createuky.net/}{https://zed.createuky.net/}}}
+
+\setlength{\headsep}{1.65in}
+\addtolength{\textheight}{-1.25in}
+\renewcommand{\baselinestretch}{1.1}
+\lhead{}
+\chead{}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0.1pt}
+\lhead{
+\includegraphics[width=2.1in]{Figures/logouk.png}
+\vskip  0em
+%
+\bf \sffamily \fontsize{7}{8}\selectfont \ColorA
+Assistant Professor of Biomedical Informatics and Computer Science\\
+University of Kentucky\\
+Lexington, KY 40508\\
+\phone: 773 7021234\\
+}
+\rhead{
+\ColorA
+  \footnotesize \me \\
+}
+\rfoot{\scriptsize\bf\sffamily\ColorA  \thepage}
+\cfoot{\scriptsize\bf\sffamily \ColorA Chattopadhyay}
+\lfoot{\scriptsize\bf\sffamily \ColorA \today}
+%\CenterWallPaper{1}{Figures/UK}
+% #######################################################################
+\def\EDITOR{Editor}
+\def\BEDITOR{Editor\xspace}
+\def\JNAME{PNAS\xspace}
+
+\def\JADDR{}
+
+% #######################################################################
+\def\TITLE{Escape from Typicality: Why Evolution Operates Near One Mutation per Genome per Generation}
+\begin{document}
+\parskip=12pt
+\parindent=0pt
+\Space
+\Space
+% #######################################################################
+% #######################################################################
+\fontsize{11}{12}\selectfont
+\Space
+\Space
+
+ \EDITOR\\
+ \JNAME\\
+ \JADDR
+
+
+ 
+Dear \BEDITOR  
+
+%% I am pleased to submit the enclosed manuscript entitled ``\textbf{\TITLE}'' for consideration as a Brief Report in \JNAME.
+
+%% This work provides a mechanism-independent derivation of the inverse scaling between per-site mutation rate and genome length commonly known as Drake’s rule. Rather than invoking explicit fitness landscapes, biochemical fidelity limits, or equilibrium population-genetic arguments, we analyze a geometric constraint on variation supply induced by blind local mutation in high-dimensional sequence space. We show that the expected rate at which mutation produces statistically atypical variants—those distinguishable from mutational background and therefore available for selective amplification—is maximized when the per-genome mutation intensity is $O(1)$, yielding $\mu^\star \propto 1/n$. 
+
+%% The result complements classical error-threshold and drift–barrier perspectives by identifying an interior supply optimum that arises purely from the combinatorics of local perturbation. Analytical derivations are supported by Monte Carlo simulations and empirical analyses of genome-scale data across  taxa.
+
+%% This manuscript is original, has not been published previously, and is not under consideration elsewhere. There are no conflicts of interest to declare.
+
+%% Thank you for your consideration. I believe the conceptual clarity, generality, and cross-disciplinary implications of this result will be of interest to the broad scientific readership of \JNAME.
+
+
+I am pleased to submit the revised manuscript entitled ``\textbf{\TITLE}'' for consideration as a Brief Report in \JNAME.
+
+
+In response to your and the reviewers’ comments, the manuscript now further clarifies the biological context of the result, explicitly addressing evolvability and mutation-rate evolution, and  the  reference list has been expanded. We have also added a minimal evolutionary illustration to demonstrate how an intermediate mutation regime can arise under indirect selection. To accommodate these additions and clarifications, the manuscript might be marginally over the Brief Report length limit.
+
+
+%% This work provides a mechanism-independent derivation of the inverse scaling between per-site mutation rate and genome length commonly known as Drake’s rule. Rather than invoking explicit fitness landscapes, biochemical fidelity limits, or equilibrium population-genetic arguments, we analyze a geometric constraint on variation supply induced by blind local mutation in high-dimensional sequence space. We show that the expected rate at which mutation produces statistically atypical variants, those distinguishable from mutational background and therefore available for selective amplification, is maximized when the per-genome mutation intensity is $O(1)$, yielding $\mu^\star \propto 1/n$.
+
+%% In this revised version, we have clarified the biological framing of the result by positioning it explicitly as a complementary supply-side principle connected to evolvability and mutation-rate evolution. We also added an evolutionary illustration showing how an intermediate mutation regime can arise under indirect selection through heritable mutation-rate variation, and we strengthened the empirical and contextual discussion accordingly. These revisions were made in direct response to the editor’s and reviewers’ comments.
+
+%% The result complements classical error-threshold and drift-barrier perspectives by identifying an interior supply optimum that arises purely from the combinatorics of local perturbation. Analytical derivations are supported by Monte Carlo simulations and empirical analyses of genome-scale data across taxa.
+
+%% This manuscript is original, has not been published previously, and is not under consideration elsewhere. There are no conflicts of interest to declare.
+
+Thank you for your consideration. I believe the conceptual clarity, generality, and cross-disciplinary implications of this revised Brief Report will be of interest to the broad scientific readership of \JNAME.
+
+
+
+
+\Space
+\vspace{-14pt}
+ 
+Sincerely,
+\vspace{-24pt}
+
+% 
+\begin{flushleft}
+\tikz{\node[]{    \includegraphics[scale=0.7]{/home/ishanu/Dropbox/Apps/ShareLaTeX/letterhead/Figures/sign2}};}
+\vspace{-30pt}
+
+\rule{2.5in}{1pt}\\
+{\fontsize{10}{10}\selectfont Ishanu Chattopadhyay}
+\hfill \today\\
+Lexington, KY
+\end{flushleft}
+
+% #######################################################################
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% End CV Document %%%%%%%%%%%%%%%%%%%%%%%%%%%%%

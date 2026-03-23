@@ -1,0 +1,419 @@
+%===================================
+\pgfplotsset{
+discard if/.style 2 args={
+x filter/.append code={
+\edef\tempa{\thisrow{#1}}
+\edef\tempb{#2}
+\ifx\tempa\tempb
+\def\pgfmathresult{inf}
+\fi
+}
+},
+discard if not/.style 2 args={
+x filter/.append code={
+\edef\tempa{\thisrow{#1}}
+\edef\tempb{#2}
+\ifx\tempa\tempb
+\else
+\def\pgfmathresult{inf}
+\fi
+}
+}
+} %===================================
+
+\begin{tikzpicture}[font=\bf\sffamily\fontsize{8}{8}\selectfont]
+\begin{axis}[
+    width=2.5in,
+    height=2in,
+    xlabel={generation},
+    ylabel={$U=n\mu$},
+    xmode=log,
+    xmin=1, xmax=1e4,
+    %ymin=0, ymax=3.2,
+    title={},
+    legend style={
+        font=\scriptsize,
+        at={(-.2,1.15)},
+        anchor=south west,
+        draw=none,
+        fill=none,
+        cells={anchor=west}
+    },
+    legend columns=2,
+  ]
+\def\COLX{gray}
+\def\COLA{\COLX}
+\def\COLB{\COLX}
+\def\COLC{\COLX}
+
+\def\COLD{\COLX}
+\def\COLE{\COLX}
+\def\COLF{\COLX}
+
+\def\COLG{\COLX}
+\def\COLH{\COLX}
+\def\COLI{\COLX}
+
+\def\COLJ{\COLX}
+\def\COLK{\COLX}
+\def\COLL{\COLX}
+
+
+\def\OPC{.3}
+
+\def\DATA{/home/ishanu/Dropbox/ZED/Research/drake/code/evolvability/summary_small.csv}
+\def\THICK{semithick}
+
+% =========================1
+% p_env_site = 0.01, init_U = 0.05
+% =========================
+\addplot[name path=loA, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y expr = \thisrow{lo}+0.2,
+    discard if not={p_env_site}{0.01},
+    discard if not={init_U}{0.05}
+] {\DATA};
+
+\addplot[name path=hiA, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y expr = \thisrow{hi}+0.2,
+    discard if not={p_env_site}{0.01},
+    discard if not={init_U}{0.05}
+] {\DATA};
+
+\addplot[\COLA, fill opacity=\OPC, forget plot] fill between[of=loA and hiA];
+\addplot[\COLA,\THICK]
+table[
+    col sep=comma,
+    x=generation, y expr = \thisrow{mean_U}+0.2,
+    discard if not={p_env_site}{0.01},
+    discard if not={init_U}{0.05}
+] {\DATA};
+%\addlegendentry{Changing target, start=0.05}
+
+% =========================2
+% p_env_site = 0.01, init_U = 0.2
+% =========================
+\addplot[name path=loB, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=lo,
+    discard if not={p_env_site}{0.01},
+    discard if not={init_U}{0.2}
+] {\DATA};
+
+\addplot[name path=hiB, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=hi,
+    discard if not={p_env_site}{0.01},
+    discard if not={init_U}{0.2}
+] {\DATA};
+
+\addplot[\COLB, fill opacity=\OPC, forget plot] fill between[of=loB and hiB];
+\addplot[\COLB,\THICK]
+table[
+    col sep=comma,
+    x=generation, y=mean_U,
+    discard if not={p_env_site}{0.01},
+    discard if not={init_U}{0.2}
+] {\DATA};
+%\addlegendentry{Changing target, start=0.2}
+
+% =========================3
+% p_env_site = 0.01, init_U = 1.5
+% =========================
+\addplot[name path=loC, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=lo,
+    discard if not={p_env_site}{0.01},
+    discard if not={init_U}{1.5}
+] {\DATA};
+
+\addplot[name path=hiC, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=hi,
+    discard if not={p_env_site}{0.01},
+    discard if not={init_U}{1.5}
+] {\DATA};
+
+\addplot[\COLC, fill opacity=\OPC, forget plot] fill between[of=loC and hiC];
+\addplot[\COLC,\THICK]
+table[
+    col sep=comma,
+    x=generation, y=mean_U,
+    discard if not={p_env_site}{0.01},
+    discard if not={init_U}{1.5}
+] {\DATA};
+%\addlegendentry{Changing target, start=1.5}
+
+% =========================4
+% p_env_site = 0.01, init_U = 3
+% =========================
+\addplot[name path=loD, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=lo,
+    discard if not={p_env_site}{0.01},
+    discard if not={init_U}{3.0}
+] {\DATA};
+
+\addplot[name path=hiD, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=hi,
+    discard if not={p_env_site}{0.01},
+    discard if not={init_U}{3.0}
+] {\DATA};
+
+\addplot[\COLD, fill opacity=\OPC, forget plot] fill between[of=loD and hiD];
+\addplot[\COLD,\THICK]
+table[
+    col sep=comma,
+    x=generation, y=mean_U,
+    discard if not={p_env_site}{0.01},
+    discard if not={init_U}{3.0}
+] {\DATA};
+%\addlegendentry{Changing target, start=3}
+
+% =========================5
+% p_env_site = 0.015, init_U = 0.05
+% =========================
+\addplot[name path=loE, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=lo,
+    discard if not={p_env_site}{0.015},
+    discard if not={init_U}{0.05}
+] {\DATA};
+
+\addplot[name path=hiE, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=hi,
+    discard if not={p_env_site}{0.015},
+    discard if not={init_U}{0.05}
+] {\DATA};
+
+\addplot[\COLE, fill opacity=\OPC, forget plot] fill between[of=loE and hiE];
+\addplot[\COLE,\THICK]
+table[
+    col sep=comma,
+    x=generation, y=mean_U,
+    discard if not={p_env_site}{0.015},
+    discard if not={init_U}{0.05}
+] {\DATA};
+%\addlegendentry{Changing target, start=0.05}
+
+% =========================6
+% p_env_site = 0.015, init_U = 0.2
+% =========================
+\addplot[name path=loF, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=lo,
+    discard if not={p_env_site}{0.015},
+    discard if not={init_U}{0.2}
+] {\DATA};
+
+\addplot[name path=hiF, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=hi,
+    discard if not={p_env_site}{0.015},
+    discard if not={init_U}{0.2}
+] {\DATA};
+
+\addplot[\COLF, fill opacity=\OPC, forget plot] fill between[of=loF and hiF];
+\addplot[\COLF,\THICK]
+table[
+    col sep=comma,
+    x=generation, y=mean_U,
+    discard if not={p_env_site}{0.015},
+    discard if not={init_U}{0.2}
+] {\DATA};
+%\addlegendentry{Changing target, start=0.2}
+
+% =========================7
+% p_env_site = 0.015, init_U = 1.5
+% =========================
+\addplot[name path=loG, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=lo,
+    discard if not={p_env_site}{0.015},
+    discard if not={init_U}{1.5}
+] {\DATA};
+
+\addplot[name path=hiG, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=hi,
+    discard if not={p_env_site}{0.015},
+    discard if not={init_U}{1.5}
+] {\DATA};
+
+\addplot[\COLG, fill opacity=\OPC, forget plot] fill between[of=loG and hiG];
+\addplot[\COLG,\THICK]
+table[
+    col sep=comma,
+    x=generation, y=mean_U,
+    discard if not={p_env_site}{0.015},
+    discard if not={init_U}{1.5}
+] {\DATA};
+%\addlegendentry{Changing target, start=1.5}
+
+% =========================8
+% p_env_site = 0.015, init_U = 3
+% =========================
+\addplot[name path=loH, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=lo,
+    discard if not={p_env_site}{0.015},
+    discard if not={init_U}{3.0}
+] {\DATA};
+
+\addplot[name path=hiH, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=hi,
+    discard if not={p_env_site}{0.015},
+    discard if not={init_U}{3.0}
+] {\DATA};
+
+\addplot[\COLH, fill opacity=\OPC, forget plot] fill between[of=loH and hiH];
+\addplot[\COLH,\THICK]
+table[
+    col sep=comma,
+    x=generation, y=mean_U,
+    discard if not={p_env_site}{0.015},
+    discard if not={init_U}{3.0}
+] {\DATA};
+%\addlegendentry{Changing target, start=3}
+
+% =========================9
+% p_env_site = 0.02, init_U = 0.05
+% =========================
+\addplot[name path=loI, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=lo,
+    discard if not={p_env_site}{0.02},
+    discard if not={init_U}{0.05}
+] {\DATA};
+
+\addplot[name path=hiI, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=hi,
+    discard if not={p_env_site}{0.02},
+    discard if not={init_U}{0.05}
+] {\DATA};
+
+\addplot[\COLI, fill opacity=\OPC, forget plot] fill between[of=loI and hiI];
+\addplot[\COLI,\THICK]
+table[
+    col sep=comma,
+    x=generation, y=mean_U,
+    discard if not={p_env_site}{0.02},
+    discard if not={init_U}{0.05}
+] {\DATA};
+%\addlegendentry{Changing target, start=0.05}
+
+%% =========================10
+% p_env_site = 0.02, init_U = 0.2
+% =========================
+\addplot[name path=loJ, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=lo,
+    discard if not={p_env_site}{0.02},
+    discard if not={init_U}{0.2}
+] {\DATA};
+
+\addplot[name path=hiJ, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y=hi,
+    discard if not={p_env_site}{0.02},
+    discard if not={init_U}{0.2}
+] {\DATA};
+
+\addplot[\COLJ, fill opacity=\OPC, forget plot] fill between[of=loJ and hiJ];
+\addplot[\COLJ,\THICK]
+table[
+    col sep=comma,
+    x=generation, y=mean_U,
+    discard if not={p_env_site}{0.02},
+    discard if not={init_U}{0.2}
+] {\DATA};
+%\addlegendentry{Changing target, start=0.2}
+
+% =========================11
+% p_env_site = 0.02, init_U = 1.5
+% =========================
+\addplot[name path=loK, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y expr=\thisrow{lo}-.2,
+    discard if not={p_env_site}{0.02},
+    discard if not={init_U}{1.5}
+] {\DATA};
+
+\addplot[name path=hiK, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y expr=\thisrow{hi}-.2,
+    discard if not={p_env_site}{0.02},
+    discard if not={init_U}{1.5}
+] {\DATA};
+
+\addplot[\COLK, fill opacity=\OPC, forget plot] fill between[of=loK and hiK];
+\addplot[\COLK,\THICK]
+table[
+    col sep=comma,
+    x=generation, y expr=\thisrow{mean_U}-0.2,
+    discard if not={p_env_site}{0.02},
+    discard if not={init_U}{1.5}
+] {\DATA};
+%\addlegendentry{Changing target, start=1.5}
+
+% =========================12
+% p_env_site = 0.02, init_U = 3
+% =========================
+\addplot[name path=loL, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y expr=\thisrow{lo}-.2,
+    discard if not={p_env_site}{0.02},
+    discard if not={init_U}{3.0}
+] {\DATA};
+
+\addplot[name path=hiL, draw=none, forget plot]
+table[
+    col sep=comma,
+    x=generation, y expr=\thisrow{hi}-.2,
+    discard if not={p_env_site}{0.02},
+    discard if not={init_U}{3.0}
+] {\DATA};
+
+\addplot[\COLL, fill opacity=\OPC, forget plot] fill between[of=loL and hiL];
+\addplot[\COLL,\THICK]
+table[
+    col sep=comma,
+    x=generation, y expr=\thisrow{mean_U}-0.2,
+    discard if not={p_env_site}{0.02},
+    discard if not={init_U}{3.0}
+] {\DATA};
+%\addlegendentry{Changing target, start=3}
+ 
+% reference lines
+\addplot[black, dashed, thick, forget plot] coordinates {(1,1.0) (10000,1.0)};
+
+\end{axis}
+\end{tikzpicture}

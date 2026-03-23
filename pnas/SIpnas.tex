@@ -1,5 +1,6 @@
 
 % ---- Begin SI numbering with S-prefix ----
+\pagestyle{empty}
 \setcounter{equation}{0}
 \renewcommand{\theequation}{S\arabic{equation}}
 
@@ -220,9 +221,33 @@ The maximizer $n\mu=1$ is obtained under the regime $\mu=o(1)$ with $n\mu^2=o(1)
 
 
 
+\paragraph*{Generation of Figure 1a: Toy Evolution Under Mutation With and Without a Viability Filter.}
 
-\paragraph{Genome Dataset Description and Compression-Based Complexity Estimation.}
-For the genome-compressibility analysis (Fig.~1a), we analyzed complete genomes from four organisms: H3N2 influenza A (2010--2025), SARS-CoV-2 (hCoV-19; 2020--2025), mpox virus (2022--2026), and \textit{Escherichia coli} (2021--2026). All viral genomes (H3N2, SARS-CoV-2, mpox) were obtained from the GISAID database, and \textit{E. coli} genomes were obtained from the NCBI GenBank/RefSeq genomes repository. In total, we analyzed 54{,}904 H3N2 genomes across 16 annual bins (2010--2025), 4{,}986 SARS-CoV-2 genomes across 6 annual bins (2020--2025), 3{,}429 mpox genomes across 5 annual bins (2022--2026), and 8{,}785 \textit{E. coli} genomes across 6 annual bins (2021--2026). Sequences were grouped by collection year and filtered to retain high-coverage, near-complete assemblies; sequences with substantial ambiguity (extended runs of non-ACGT symbols), obvious truncation, or pervasive gaps were excluded prior to analysis. All retained genomes were processed through an identical compression pipeline to ensure cross-organism comparability.
+Fig.~\ref{figsim}a illustrates a controlled simulation on sequence space $[4]^n$ designed to contrast mutation-driven entropy increase with mutation constrained by a simple structural viability criterion. We fix an alphabet of size $q=4$ and a genome length $n$ (as specified in the accompanying code). A single ``structured template'' sequence $x^\star \in [4]^n$ is sampled once and held fixed throughout the experiment. Independent replicate lineages are initialized at this template and evolved forward for a fixed number of generations.
+
+At each generation, offspring are generated from the current sequence by independent per-site mutation with probability $\mu$. Conditional on mutation at a site, the new symbol is chosen uniformly from the remaining $q-1$ alternatives. This defines the mutation-only dynamics. For the mutation-plus-filter condition, the same mutation step is applied, but the offspring is accepted only if its Hamming distance from the template $x^\star$ does not exceed a fixed threshold $r$. If the proposed offspring violates this constraint, it is rejected and the parent sequence is retained for that generation.
+
+For each lineage and generation, we compute a reference-free entropy proxy given by the empirical bigram conditional entropy,
+\[
+H(X_t \mid X_{t-1}) \;=\; -\sum_{a,b} p(a,b)\log_2 p(b\mid a),
+\]
+estimated from adjacent base pairs in the current sequence and reported in bits per symbol. Multiple independent replicate lineages are simulated under each regime, and the plotted trajectories represent the mean across replicates as a function of generation.
+
+Under mutation alone, trajectories approach the maximal entropy regime for a four-letter alphabet (near $2$ bits per symbol), reflecting convergence toward statistical typicality under repeated local perturbation. Under mutation with the viability filter, trajectories remain bounded away from this maximum, as the Hamming constraint prevents diffusion into the exponentially large typical set. The panel therefore visualizes the supply--erosion tension discussed in the main text: unconstrained mutation drives sequences toward maximal entropy, whereas even a simple structural constraint maintains bounded complexity over time.
+
+
+
+%% Fig.~\ref{figsim}a illustrates a controlled simulation on sequence space $[4]^n$ designed to contrast mutation-driven entropy increase with mutation constrained by a simple structural viability criterion. We fix an alphabet of size $q=4$ and a genome length $n$ (as specified in the accompanying code). A single ``structured template'' sequence $x^\star \in [4]^n$ is sampled once and held fixed throughout the experiment. Independent replicate lineages are initialized at this template and evolved forward for a fixed number of generations.
+
+%% At each generation, offspring are generated from the current sequence by independent per-site mutation with probability $\mu$. Conditional on mutation at a site, the new symbol is chosen uniformly from the remaining $q-1$ alternatives. This defines the mutation-only dynamics. For the mutation-plus-filter condition, the same mutation step is applied, but the offspring is accepted only if its Hamming distance from the template $x^\star$ does not exceed a fixed threshold $r$. If the proposed offspring violates this constraint, it is rejected and the parent sequence is retained for that generation.
+
+%% For each lineage and generation, we compute a reference-free complexity proxy defined as the zlib-compressed length (in bits) divided by genome length, yielding a bits-per-symbol statistic. Compression is applied directly to the raw symbolic sequence without alignment or model fitting. Multiple independent replicate lineages are simulated under each regime, and the plotted trajectories represent the mean across replicates as a function of generation.
+
+%% Under mutation alone, trajectories approach the maximal entropy regime for a 4-letter alphabet (near $2$ bits per symbol), reflecting convergence toward statistical typicality under repeated local perturbation. Under mutation with the viability filter, trajectories remain bounded away from this maximum, as the Hamming constraint prevents diffusion into the exponentially large typical set. The panel therefore visualizes the supply--erosion tension discussed in the main text: unconstrained mutation drives sequences toward maximal entropy, whereas even a simple structural constraint maintains bounded complexity over time.
+
+
+\paragraph{Generation of Figure 1b: Genome Dataset Description and Compression-Based Complexity Estimation.}
+For the genome-compressibility analysis (Fig.~\ref{figsim}b), we analyzed complete genomes from four organisms: H3N2 influenza A (2010--2025), SARS-CoV-2 (hCoV-19; 2020--2025), mpox virus (2022--2026), and \textit{Escherichia coli} (2021--2026). All viral genomes (H3N2, SARS-CoV-2, mpox) were obtained from the GISAID database, and \textit{E. coli} genomes were obtained from the NCBI GenBank/RefSeq genomes repository. In total, we analyzed 54{,}904 H3N2 genomes across 16 annual bins (2010--2025), 4{,}986 SARS-CoV-2 genomes across 6 annual bins (2020--2025), 3{,}429 mpox genomes across 5 annual bins (2022--2026), and 8{,}785 \textit{E. coli} genomes across 6 annual bins (2021--2026). Sequences were grouped by collection year and filtered to retain high-coverage, near-complete assemblies; sequences with substantial ambiguity (extended runs of non-ACGT symbols), obvious truncation, or pervasive gaps were excluded prior to analysis. All retained genomes were processed through an identical compression pipeline to ensure cross-organism comparability.
 
 To estimate compressibility we computed a reference-free ``bits per base'' statistic from lossless compression. Each genome sequence was mapped to an ASCII byte string over $\{A,C,G,T\}$ after the filtering step and then compressed using \texttt{zlib} with a fixed compression level and identical settings across all organisms and years. Let $C_{\mathrm{real}}(x)$ denote the compressed length in bits of a genome $x$ of length $n$. We first computed the naive compressed bits per base $b_{\mathrm{raw}}(x)=C_{\mathrm{real}}(x)/n$. Because lossless compressors incur finite overhead and windowing effects that can bias short sequences, we applied a length-matched overhead correction: for each distinct length $n$ observed within an organism-year bin, we generated a set of IID uniform random DNA sequences of length $n$, compressed them with the same \texttt{zlib} settings, and estimated the overhead term
 \[
@@ -236,25 +261,74 @@ with $b_{\mathrm{corr}}(x)$ truncated to the interval $[0,2]$ for interpretabili
 
 
 
-\paragraph*{Generation of Figure 1b: Toy Evolution Under Mutation With and Without a Viability Filter.}
 
-Panel b illustrates a controlled simulation on sequence space $[4]^n$ designed to contrast mutation-driven entropy increase with mutation constrained by a simple structural viability criterion. We fix an alphabet of size $q=4$ and a genome length $n$ (as specified in the accompanying code). A single ``structured template'' sequence $x^\star \in [4]^n$ is sampled once and held fixed throughout the experiment. Independent replicate lineages are initialized at this template and evolved forward for a fixed number of generations.
 
-At each generation, offspring are generated from the current sequence by independent per-site mutation with probability $\mu$. Conditional on mutation at a site, the new symbol is chosen uniformly from the remaining $q-1$ alternatives. This defines the mutation-only dynamics. For the mutation-plus-filter condition, the same mutation step is applied, but the offspring is accepted only if its Hamming distance from the template $x^\star$ does not exceed a fixed threshold $r$. If the proposed offspring violates this constraint, it is rejected and the parent sequence is retained for that generation.
-
-For each lineage and generation, we compute a reference-free complexity proxy defined as the zlib-compressed length (in bits) divided by genome length, yielding a bits-per-symbol statistic. Compression is applied directly to the raw symbolic sequence without alignment or model fitting. Multiple independent replicate lineages are simulated under each regime, and the plotted trajectories represent the mean across replicates as a function of generation.
-
-Under mutation alone, trajectories approach the maximal entropy regime for a 4-letter alphabet (near $2$ bits per symbol), reflecting convergence toward statistical typicality under repeated local perturbation. Under mutation with the viability filter, trajectories remain bounded away from this maximum, as the Hamming constraint prevents diffusion into the exponentially large typical set. The panel therefore visualizes the supply--erosion tension discussed in the main text: unconstrained mutation drives sequences toward maximal entropy, whereas even a simple structural constraint maintains bounded complexity over time.
 \paragraph*{Generation of Figure 1c,d: Simulation and theory for the discovery rate under independent per-site mutation.}
 
-Panels c--d plot the expected discovery rate $\Phi(\mu)$ under the independent per-site mutation model, together with Monte Carlo (MC) estimates for selected genome lengths. We fix alphabet size $q$ (taken as $q=4$ in the simulations) and a novelty margin $\Delta$ (as specified in the code). For each genome length $n$, mutation is modeled as follows: the number of mutated sites $M$ is distributed as $M\sim\mathrm{Binomial}(n,\mu)$, and conditional on $M=m$ and a parent sequence $X\in[q]^n$, an offspring $Y$ is drawn uniformly from the Hamming sphere $H_m(X)$, implemented by choosing $m$ distinct sites uniformly without replacement and replacing each selected symbol by a uniformly chosen alternative from the remaining $q-1$ symbols. The discovery event is defined as $\Delta_Y(H_M(X))\ge \Delta$, i.e., positive randomness deficiency at least $\Delta$ relative to the mutation-induced model class $H_m(X)$.
+Fig.~\ref{figsim}c,d plot the expected discovery rate $\Phi(\mu)$ under the independent per-site mutation model, together with Monte Carlo (MC) estimates for selected genome lengths. We fix alphabet size $q$ (taken as $q=4$ in the simulations) and a novelty margin $\Delta$ (as specified in the code). For each genome length $n$, mutation is modeled as follows: the number of mutated sites $M$ is distributed as $M\sim\mathrm{Binomial}(n,\mu)$, and conditional on $M=m$ and a parent sequence $X\in[q]^n$, an offspring $Y$ is drawn uniformly from the Hamming sphere $H_m(X)$, implemented by choosing $m$ distinct sites uniformly without replacement and replacing each selected symbol by a uniformly chosen alternative from the remaining $q-1$ symbols. The discovery event is defined as $\Delta_Y(H_M(X))\ge \Delta$, i.e., positive randomness deficiency at least $\Delta$ relative to the mutation-induced model class $H_m(X)$.
 
-\emph{Theory curves.} The theoretical $\Phi(\mu)$ plotted as solid lines in panel c are computed from the closed-form expression obtained by substituting the typical-case bound into the binomial mixture (Eq.~(S15) in the SI), yielding
+\emph{Theory curves.} The theoretical $\Phi(\mu)$ plotted as solid lines in panel c are computed from the closed-form expression obtained by substituting the typical-case bound into the binomial mixture (\eqref{eq:si:PhiAsymp}), yielding
 \[
-\Phi(\mu)\;\approx\; C\,2^{-\Delta}(1-\mu)^n\sum_{m=1}^n\Big(\frac{\mu}{q-1}\Big)^m,
+\Phi(\mu)\approx C\,2^{-\Delta}(1-\mu)^n\sum_{m=1}^n\Big(\frac{\mu}{q-1}\Big)^m,
 \]
 where $C$ absorbs polylogarithmic factors (set to $C=1$ for plotting), and the geometric sum is evaluated exactly up to $m=n$. Panel c displays $\Phi(\mu)$ as a function of the per-site rate $\mu$ for multiple $n$, showing the interior maximizer shifting as $\mu^\star\propto 1/n$.
 
 \emph{Monte Carlo estimates.} For MC points (shown where available), we estimate $\Phi(\mu)$ directly by sampling $R$ independent replicates at each $(n,\mu)$. In each replicate we sample a parent $X\sim\mathrm{Unif}([q]^n)$, sample $M\sim\mathrm{Binomial}(n,\mu)$, and generate $Y$ by applying an $m$-site mutation as above. We then evaluate the discovery indicator $\mathbf{1}\{\Delta_Y(H_M(X))\ge \Delta\}$ using the SI criterion $\Delta_Y(H_m(X)) = K(H_m(X))+\log|H_m(X)|-K(Y)$ with $K(H_m(X))=K(X)+O(\log n)$ and with $K(\cdot)$ operationalized by the same code-length surrogate used throughout the manuscript (as implemented in the provided code). Averaging the indicator over replicates yields the MC estimate $\widehat{\Phi}(\mu)$.
 
 \emph{Collapse in mutation temperature.} Panel d re-parameterizes the horizontal axis by the per-genome mutation intensity (``mutation temperature'') $T=n\mu=E[M]$. The same theoretical curves are replotted as $\Phi(T/n)$ versus $T$ for each $n$, producing a collapse onto a common profile with a maximum near $T\simeq 1$. The dashed guide curve shows the small-$\mu$ asymptotic shape $\Phi(\mu)\propto \mu e^{-n\mu}$, i.e., $\Phi(T/n)\propto T e^{-T}$ up to a multiplicative constant, derived by expanding $(1-\mu)^n\approx e^{-n\mu}$ and truncating the geometric sum to leading order in $\mu$ (SI Lemma~S2). This demonstrates that the optimal regime corresponds to an $O(1)$ expected number of mutations per genome per generation and yields the scaling $\mu^\star\approx 1/n$.
+
+
+%% \paragraph{Generation of Figure 1e: Simple genome simulation with evolving mutation-rate modifiers.}
+%% To illustrate that an intermediate genomic mutation intensity can arise without being imposed by construction, we implemented a minimal individual-based simulation in which mutation rate is a heritable quantitative trait subject to stochastic modification. Each individual carries a binary genome of fixed length $n$ and an associated per-site mutation probability $\mu$, defining genomic mutation intensity $U=n\mu$. Offspring genomes are generated by independent per-site mutation, and mutation rates themselves undergo occasional multiplicative changes (modifier mutations) and are constrained within fixed lower and upper bounds. Selection acts only through offspring viability relative to a target sequence, with fitness decreasing exponentially with Hamming distance to the target. Environmental change is modeled as independent stochastic flips of target sites with probability $p_{\mathrm{env}}$ per generation. No direct fitness term depends on mutation rate, and no objective function favors any particular value of $U$. Under these rules, mutation rate evolves solely through its indirect effects on offspring viability, and the intermediate mutation regime observed in Fig.~1e emerges from the balance between insufficient production of adaptive variants at low rates and excessive deleterious load at high rates. The simulation is intentionally stylized and is used only to demonstrate that such behavior can arise generically under selection on viability in a changing environment, rather than to model a specific biological system.
+
+{\color{red}
+
+\paragraph{Magnitude of entropy variation in viral genomes.}
+Across the  genome collections analyzed here, including seasonal H3N2 influenza sequences, the estimated per-base entropy varies only within a narrow range (approximately $1.92$--$1.94$ bits per base for a four-letter alphabet). The theoretical Shannon upper bound for such sequences is $2$ bits per base, corresponding to perfectly incompressible strings. The observed variation therefore represents small fluctuations around a regime that remains close to maximal entropy throughout the observation period. In particular, the differences among years or lineages do not approach low-entropy regimes and do not alter the qualitative conclusion that evolving genomes operate near the information-theoretic ceiling imposed by the alphabet size.
+
+Additional viral strains and species examined in the same manner show similarly high entropy values close to the theoretical maximum, and the organisms displayed in Fig.~1b were selected as representative examples of this general pattern. While the somewhat larger fluctuations observed in H3N2 may contain biologically informative signals related to lineage dynamics or selective events, such variation is not essential to the arguments developed in this work. For the purposes of the present analysis, the relevant observation is that these fluctuations remain confined to a narrow interval near the maximal entropy value of $2$ bits per base, indicating stability within a high-entropy regime rather than transitions to fundamentally different complexity states.
+
+
+
+\paragraph{Generation of Figure 1e: Simple genome simulation with evolving mutation-rate modifiers.}
+To illustrate that an intermediate genomic mutation intensity (close to the order one optimal) can arise from indirect selection rather than being imposed by construction, we simulated an asexual population of $N$ binary genomes of fixed length $n$, with each individual carrying its own heritable per-site mutation probability $\mu_i$ and corresponding genomic mutation intensity $U_i=n\mu_i$. In the runs shown in Fig.~1e, the command-line defaults were used unless otherwise noted: population size $N=400$, genome length $n=80$, number of generations $G=10^4$, offspring-pool factor $2$, lower and upper bounds on mutation rate $\mu_{\min}=0.00125$ and $\mu_{\max}=0.20$, modifier-mutation probability $0.05$, and log-scale modifier step size $\sigma=0.18$; initial genomic mutation intensities were taken from $U_0\in\{0.05,0.20,1.50,3.00\}$, so that all individuals in a given replicate began with $\mu_i=U_0/n$ and identical initial genomes. The target sequence was initialized as the all-zero binary string, and the initial population was also taken to be all-zero, so each replicate begins perfectly adapted to the initial environment. These ingredients are set directly in the simulation routine and argument parser. 
+
+At generation $g$, each individual genome $x_i^{(g)}\in\{0,1\}^n$ is evaluated against a target sequence $z^{(g)}\in\{0,1\}^n$ by Hamming distance
+\[
+d_i^{(g)} \;=\; d_H\!\bigl(x_i^{(g)},z^{(g)}\bigr),
+\]
+and parental fitness is taken to be
+\[
+w_i^{(g)} \;=\; \exp\!\bigl(-c\, d_i^{(g)}\bigr),
+\]
+where $c$ is a mismatch penalty. 
+
+Each generation consists of five stages. First, parents are sampled with replacement with probability proportional to parental fitness, producing an offspring pool of size $M=\kappa N$, where $\kappa$ is the offspring-pool factor (equal to $2$ in the default runs). Second, each offspring inherits its parent’s genome and per-site mutation probability $\mu_i$, and each genomic site then mutates independently with probability $\mu_i$. Equivalently, if $x_{ij}$ denotes site $j$ of offspring $i$, then
+\[
+x_{ij}^{\mathrm{off}} \;=\; x_{ij}^{\mathrm{par}} \oplus B_{ij},
+\qquad
+B_{ij}\sim \mathrm{Bernoulli}(\mu_i),
+\]
+independently across sites and offspring. Third, mutation rates themselves evolve through modifier mutations: each offspring undergoes a modifier event with probability $p_{\mathrm{mod}}=0.05$, and if such an event occurs its mutation rate is multiplied by a log-normal factor,
+\[
+\mu_i' \;=\; \mu_i \exp(\varepsilon_i),
+\qquad
+\varepsilon_i \sim \mathcal N(0,\sigma^2), \;\; \sigma=0.18,
+\]
+after which $\mu_i'$ is clipped to the interval $[\mu_{\min},\mu_{\max}]$. Fourth, offspring viability is evaluated by the same fitness rule as above, using offspring Hamming distance to the current target, and the next generation of size $N$ is sampled with replacement from the offspring pool in proportion to offspring fitness. Finally, the environment changes exogenously: each target site flips independently with probability $p_0$, so that
+\[
+z_j^{(g+1)} \;=\; z_j^{(g)} \oplus E_j^{(g)},
+\qquad
+E_j^{(g)}\sim \mathrm{Bernoulli}(p_0),
+\]
+independently across sites. The expected number of target-site changes per generation is therefore $n\,p_0$.
+
+We note first that no term in the fitness function depends directly on mutation rate itself. Fitness depends only on genomic mismatch to the target, and mutation rates are selected only indirectly through their effects on the distribution of offspring genotypes. Second, the simulation does not impose an optimal value such as $U=1$ anywhere in the update rules. Mutation rates are initialized over a wide range, including values far below and above the order-one regime, and the subsequent movement of $U=n\mu$ arises entirely from differential descendant success. Third, environmental change is exogenous and independent of the population state; the target simply performs a stochastic walk in sequence space at rate $p_0$. Thus the observed intermediate regime is not encoded as an objective function of $U$, but emerges from the balance between two opposing effects already implicit in the simulation rules: when mutation rates are too small, offspring rarely generate variants capable of tracking the moving target, whereas when mutation rates are too large, offspring accumulate excess deleterious changes and therefore lower viability. In this sense, the figure is intended as a minimal evolutionary demonstration that indirect selection on mutation-rate modifiers can favor an intermediate genomic mutation intensity under changing selection, not as a quantitative model of any particular biological system.
+
+For each environmental turnover rate $p_0$ and each initial intensity $U_0$, a collection of replicate tasks was generated with distinct random seeds derived from a common seed base plus deterministic offsets depending on replicate index, $U_0$, and $p_0$. The raw output for each generation and replicate included the population mean, median, and standard deviation of $U$, mean parental Hamming mismatch, and mean parental fitness. After concatenating replicate trajectories, summary curves were computed by grouping over $(p_0,c,U_0,g)$ and recording the mean of \texttt{mean\_U} across replicates, together with its across-replicate standard deviation, standard error, and a nominal $95\%$ interval
+\[
+\mathrm{mean}_U \pm 1.96 \,\frac{\mathrm{sd}_U}{\sqrt{n_{\mathrm{rep}}}}.
+\]
+Terminal summary statistics were obtained by restricting to the final generation and averaging over replicates for each $(p_0,c)$. The simulation script is available in the linked code repository. %These summary calculations, as well as the generation of the plotted panel, are performed explicitly in the post-processing stage of the script.
+}
+ 
